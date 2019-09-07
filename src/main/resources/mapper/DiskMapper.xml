@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itdan.document.dao.DiskMapper">
+  <resultMap id="BaseResultMap" type="com.itdan.document.domain.Disk">
+    <id column="disk_id" jdbcType="INTEGER" property="diskId" />
+    <result column="disk_name" jdbcType="VARCHAR" property="diskName" />
+    <result column="disk_type" jdbcType="VARCHAR" property="diskType" />
+    <result column="free_space" jdbcType="VARCHAR" property="freeSpace" />
+    <result column="total_space" jdbcType="VARCHAR" property="totalSpace" />
+  </resultMap>
+
+
+  <!--添加磁盘对象-->
+  <insert id="addDisk" parameterType="com.itdan.document.domain.Disk">
+   INSERT  into  disk
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="disk_id != null" >
+        disk_id,
+      </if>
+      <if test="disk_name != null" >
+        disk_name,
+      </if>
+      <if test="disk_type != null" >
+        disk_type,
+      </if>
+      <if test="free_space != null" >
+        free_space,
+      </if>
+      <if test="total_space != null" >
+      total_space
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="disk_id != null" >
+        #{disk_id,jdbcType=INTEGER},
+      </if>
+      <if test="disk_name != null" >
+        #{disk_name,jdbcType=VARCHAR},
+      </if>
+      <if test="disk_type != null" >
+        #{disk_type,jdbcType=VARCHAR},
+      </if>
+      <if test="free_space != null" >
+        #{free_space,jdbcType=VARCHAR},
+      </if>
+      <if test="total_space != null" >
+        #{total_space,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>
