@@ -1,8 +1,11 @@
 package com.itdan.test.disk;
 
+import com.itdan.document.dao.DiskMapper;
 import com.itdan.document.domain.Disk;
 import com.itdan.document.service.DocumentService;
 import com.itdan.document.utils.common.DocumentUtils;
+import com.itdan.document.utils.common.JsonUtils;
+import com.itdan.document.utils.result.DocumentReslut;
 import com.itdan.test.BaseTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,8 @@ public class DiskTest extends BaseTest {
 
     @Autowired
     private DocumentService documentService;
+    @Autowired
+    private DiskMapper diskMapper;
 
     public static void main(String [] args){
 
@@ -122,14 +127,45 @@ public class DiskTest extends BaseTest {
 
 
     @Test
-    public void testDiskDemo() throws Exception{
-
-        //测试DiskService
-      List<Disk> diskList= documentService.GetDisk();
-
-      for (Disk disk:diskList){
-          System.out.println(disk);
-      }
+    public void testDiskDemo01() throws Exception{
+        //测试DiskDAO
 
     }
+
+    @Test
+    public void testDiskDemo02() throws Exception{
+        //测试DiskService
+      List<Disk> diskList= documentService.getDisk();
+      //List<Disk> diskList= JsonUtils.jsonToList(o.toString(),Disk.class);
+        System.out.println("diskList:"+diskList.toString());
+
+        for (Disk disk:diskList){
+            System.out.println(disk.toString());
+        }
+    }
+
+    @Test
+    public void testDiskDemo03() throws Exception{
+      //测试getDiskById
+        Disk disk= documentService.getDiskById(105838662);
+        System.out.println(disk.toString());
+    }
+
+    @Test
+    public void testDiskDemo04() throws Exception{
+        //测试获取根目录文件后，怎么去获取其相应的信息
+        //现根据ID获取根目录信息
+        Disk disk=documentService.getDiskById(105838662);
+        String diskName=disk.getDiskName();
+        System.out.println(diskName);//本地磁盘 (C:)
+        File[] files=File.listRoots();
+        System.out.println("Files:"+files);
+        for (File file:files){
+            System.out.println("file:"+file);//C:\
+        }
+        //经过上面的测试我们可以得知，我要截取字符串
+
+    }
+
+
 }

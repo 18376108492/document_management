@@ -10,40 +10,55 @@
   </resultMap>
 
 
+
+  <select id="getDiskById" parameterType="Integer" resultMap="BaseResultMap">
+      select * from  disk
+      where
+      <if test="diskId!=null">
+        disk_id=#{diskId,jdbcType=INTEGER}
+      </if>
+  </select>
+
+<!--从数据库中查询磁盘列表-->
+  <select id="getDiskList" resultMap="BaseResultMap">
+    SELECT * from  disk
+  </select>
+
   <!--添加磁盘对象-->
   <insert id="addDisk" parameterType="com.itdan.document.domain.Disk">
    INSERT  into  disk
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="disk_id != null" >
+      <if test="diskId != null" >
         disk_id,
       </if>
-      <if test="disk_name != null" >
+      <if test="diskName != null" >
         disk_name,
       </if>
-      <if test="disk_type != null" >
+      <if test="diskType != null" >
         disk_type,
       </if>
-      <if test="free_space != null" >
+      <if test="freeSpace != null" >
         free_space,
       </if>
-      <if test="total_space != null" >
+      <if test="totalSpace != null" >
       total_space
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="disk_id != null" >
-        #{disk_id,jdbcType=INTEGER},
+      <if test="diskId != null" >
+        #{diskId,jdbcType=INTEGER},
       </if>
-      <if test="disk_name != null" >
-        #{disk_name,jdbcType=VARCHAR},
+      <if test="diskName != null" >
+        #{diskName,jdbcType=VARCHAR},
       </if>
-      <if test="disk_type != null" >
-        #{disk_type,jdbcType=VARCHAR},
+      <if test="diskType != null" >
+        #{diskType,jdbcType=VARCHAR},
       </if>
-      <if test="free_space != null" >
-        #{free_space,jdbcType=VARCHAR},
+      <if test="freeSpace != null" >
+        #{freeSpace,jdbcType=VARCHAR},
       </if>
-      <if test="total_space != null" >
-        #{total_space,jdbcType=VARCHAR},
+      <if test="totalSpace != null" >
+        #{totalSpace,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>

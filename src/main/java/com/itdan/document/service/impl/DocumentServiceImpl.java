@@ -6,8 +6,12 @@ import com.itdan.document.domain.DocumentFile;
 import com.itdan.document.service.DocumentService;
 import com.itdan.document.utils.common.DocumentUtils;
 import com.itdan.document.utils.common.IDUtils;
+import com.itdan.document.utils.common.JsonUtils;
+import com.itdan.document.utils.jedis.JedisClient;
 import com.itdan.document.utils.result.DocumentReslut;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.swing.filechooser.FileSystemView;
@@ -23,10 +27,14 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Autowired
     private DiskMapper diskMapper;
+    @Autowired
+    private JedisClient jedisClient;
+
+    @Value("${DISK_LIST_EXPIRE}")
+    private Integer DISK_LIST_EXPIRE;
 
     @Override
-    public DocumentReslut GetDisk() {
-
+    public List<Disk> getDisk() {
         //获取当前系统文件类型
         FileSystemView fileSystemView=FileSystemView.getFileSystemView();
         //根目录信息集合
@@ -40,11 +48,69 @@ public class DocumentServiceImpl implements DocumentService {
             disk.setDiskType(fileSystemView.getSystemTypeDescription(f));
             disk.setFreeSpace(DocumentUtils.readableFileSize(f.getFreeSpace()));
             disk.setTotalSpace(DocumentUtils.readableFileSize(f.getTotalSpace()));
+            addDisk(disk);
             diskList.add(disk);
         }
-      return   DocumentReslut.ok(diskList);
+      return   diskList;
     }
 
+    @Override
+    public List<Disk> getDiskList() {
+        //需要确定好个磁盘的ID
+        //先判断redis中是否存在磁盘信息，如果不存在就从数据库中查询。
+        try{
+            //从redis中获取数据
+            String json=jedisClient.get("DISK_LIST");
+            List<Disk> diskList=JsonUtils.jsonToList(json,Disk.class);
+            if(StringUtils.isNotBlank(json)){
+               return diskList;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        //从数据中查询磁盘缓存数据
+        List<Disk>diskList= diskMapper.getDiskList();
+
+        //将从数据中查询的磁盘信息存储到redis中
+        //查询数据库,把结果添加到redis缓存中
+        try {
+            //设置缓存的key和value值
+            jedisClient.set("DISK_LIST",JsonUtils.objectToJson(diskList));
+            //设置缓存过期时间
+            jedisClient.expire("DISK_LIST",DISK_LIST_EXPIRE);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return diskList;
+    }
+
+    @Override
+    public DocumentReslut updateDisk(Integer diskId) {
+        //更新磁盘的数据不是我们自己输入的，我们得知更新磁盘的ID
+        //去获取该磁盘的根目录文件，在通过根目录去获取该磁盘的其他信息
+        //再将更新后的数据保存到数据库中。并且同步redis中的磁盘相关信息
+
+        //根据ID获取要更新磁盘的信息，主要获取根目录
+        Disk disk=diskMapper.getDiskById(diskId);
+        if(disk!=null){
+            String diskName=disk.getDiskName();//获取根目录
+
+        }
+
+
+        return null;
+    }
+
+    @Override
+    public Disk getDiskById(Integer diskId) {
+        //根据ID获取相应磁盘信息
+      if(diskId!=null){
+          Disk disk= diskMapper.getDiskById(diskId);
+          return disk;
+      }
+      return null;
+    }
 
     @Override
     public DocumentReslut addDisk(Disk disk) {
@@ -58,7 +124,7 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public DocumentReslut GetDocument(String diskName) {
+    public DocumentFile GetDocument(String diskName) {
         return null;
     }
 
