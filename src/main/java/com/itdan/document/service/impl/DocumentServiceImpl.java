@@ -91,25 +91,39 @@ public class DocumentServiceImpl implements DocumentService {
         //去获取该磁盘的根目录文件，在通过根目录去获取该磁盘的其他信息
         //再将更新后的数据保存到数据库中。并且同步redis中的磁盘相关信息
 
+        if (diskId==null) {
+        return  DocumentReslut.build(400,"更新失败");
+        }
+
         //根据ID获取要更新磁盘的信息，主要获取根目录
         Disk disk=diskMapper.getDiskById(diskId);
         if(disk!=null){
             String diskName=disk.getDiskName();//获取根目录
-
+            String rootName=DocumentUtils.getDiskRoot(diskName);//拼接根目录名
+            if(StringUtils.isNotBlank(rootName)){
+                //获取磁盘的可用空间
+                File file=new File(rootName);
+                String freeSpace= DocumentUtils.readableFileSize(file.getFreeSpace());
+                //获取磁盘的总空间
+                String totalSpace=DocumentUtils.readableFileSize(file.getTotalSpace());
+                disk.setFreeSpace(freeSpace);
+                disk.setTotalSpace(totalSpace);
+                diskMapper.addDisk(disk);
+                return DocumentReslut.ok("更新"+diskName+"成功。");
+            }
+            return DocumentReslut.build(400,"更新"+diskName+"失败");
         }
-
-
-        return null;
+        return DocumentReslut.build(400,"更新失败");
     }
 
     @Override
     public Disk getDiskById(Integer diskId) {
         //根据ID获取相应磁盘信息
-      if(diskId!=null){
+      if(diskId==null) {
+          return null;
+      }
           Disk disk= diskMapper.getDiskById(diskId);
           return disk;
-      }
-      return null;
     }
 
     @Override
@@ -125,6 +139,15 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public DocumentFile GetDocument(String diskName) {
+
+        if (diskName!=null) {
+            //获取磁盘根目录
+            String rootName = DocumentUtils.getDiskRoot(diskName);
+            if (StringUtils.isNotBlank(rootName)) {
+
+
+            }
+        }
         return null;
     }
 

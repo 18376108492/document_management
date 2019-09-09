@@ -7,11 +7,13 @@ import com.itdan.document.utils.common.DocumentUtils;
 import com.itdan.document.utils.common.JsonUtils;
 import com.itdan.document.utils.result.DocumentReslut;
 import com.itdan.test.BaseTest;
+import com.sun.xml.internal.xsom.impl.scd.Iterators;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -163,9 +165,35 @@ public class DiskTest extends BaseTest {
         for (File file:files){
             System.out.println("file:"+file);//C:\
         }
-        //经过上面的测试我们可以得知，我要截取字符串
+        //经过上面的测试我们可以得知，我们要截取字符串
 
     }
 
+    @Test
+    public void testDiskDemo05() throws Exception{
+        //截取字符串,和拼接字符串
+        Disk disk=documentService.getDiskById(105838662);
+        String diskName=disk.getDiskName();//本地磁盘 (C:)
+        // 变成  //C:\
+        String newName=DocumentUtils.getDiskRoot(diskName);
+        System.out.println("newName:"+newName);//newName://C
+    }
+
+
+    @Test
+    public void testDiskDemo06() throws Exception{
+       //测试，当知道磁盘的根目录文件后去获取该系统盘下的全部文件。
+
+        //截取字符串,和拼接字符串
+        Disk disk=documentService.getDiskById(105838662);
+        String diskName=disk.getDiskName();//本地磁盘 (C:)
+        // 变成  //C:\
+        String newName=DocumentUtils.getDiskRoot(diskName);
+        System.out.println("newName:"+newName);//newName://C
+
+        File file=new File(newName);
+
+
+    }
 
 }
