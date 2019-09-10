@@ -10,7 +10,7 @@
   </resultMap>
 
 
-
+<!--根据ID获取磁盘信息-->
   <select id="getDiskById" parameterType="Integer" resultMap="BaseResultMap">
       select * from  disk
       where

@@ -3,12 +3,13 @@ package com.itdan.document.utils.result;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * 自定义结果响应模板
  */
-public class DocumentReslut {
+public class DocumentReslut implements Serializable {
 
 
     // 定义jackson对象

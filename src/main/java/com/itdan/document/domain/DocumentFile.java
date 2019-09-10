@@ -1,11 +1,12 @@
 package com.itdan.document.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * 文件实体类
  */
-public class DocumentFile {
+public class DocumentFile implements Serializable {
     private Integer id;//文件编号
 
     private Integer parentPoint;//父类节点
@@ -104,5 +105,21 @@ public class DocumentFile {
 
     public void setChangeDate(Date changeDate) {
         this.changeDate = changeDate;
+    }
+
+    @Override
+    public String toString() {
+        return "DocumentFile{" +
+                "id=" + id +
+                ", parentPoint=" + parentPoint +
+                ", childrenPoint=" + childrenPoint +
+                ", document='" + document + '\'' +
+                ", fileSize=" + fileSize +
+                ", fileAddr='" + fileAddr + '\'' +
+                ", fileName='" + fileName + '\'' +
+                ", fileDate=" + fileDate +
+                ", backups=" + backups +
+                ", changeDate=" + changeDate +
+                '}';
     }
 }

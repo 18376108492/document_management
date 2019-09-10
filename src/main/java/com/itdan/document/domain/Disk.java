@@ -1,9 +1,11 @@
 package com.itdan.document.domain;
 
+import java.io.Serializable;
+
 /**
  * 磁盘实体类
  */
-public class Disk {
+public class Disk implements Serializable {
     private Integer diskId;
 
     private String diskName; //磁盘名

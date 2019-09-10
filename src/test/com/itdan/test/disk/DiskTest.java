@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -182,7 +184,7 @@ public class DiskTest extends BaseTest {
 
     @Test
     public void testDiskDemo06() throws Exception{
-       //测试，当知道磁盘的根目录文件后去获取该系统盘下的全部文件。
+        //测试，当知道磁盘的根目录文件后去获取该系统盘下的全部文件。
 
         //截取字符串,和拼接字符串
         Disk disk=documentService.getDiskById(105838662);
@@ -190,10 +192,14 @@ public class DiskTest extends BaseTest {
         // 变成  //C:\
         String newName=DocumentUtils.getDiskRoot(diskName);
         System.out.println("newName:"+newName);//newName://C
-
         File file=new File(newName);
-
-
+        System.out.println("最后更改的时间："+file.lastModified());
+        //DocumentUtils.listAllFile(file);
+        //将遍历出来的所有文件进行存储，并将父子关系区分好。
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        String dateTime=df.format(new Date(file.lastModified()));
+        System.out.println("dateTime:"+dateTime);
     }
+
 
 }

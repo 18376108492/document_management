@@ -46,6 +46,13 @@ public interface DocumentService {
     DocumentReslut addDisk(Disk disk);
 
     /**
+     * 添加磁盘根目录下的所有文件到数据库中
+     * @param documentFile 文档对象
+     * @return
+     */
+    DocumentReslut addDocumentFile(DocumentFile documentFile);
+
+    /**
      * 根据相应的磁盘名获取该磁盘的文件
      * @param diskName 磁盘名
      * @return 该磁盘的全部文档

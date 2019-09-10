@@ -1,6 +1,7 @@
 package com.itdan.document.service.impl;
 
 import com.itdan.document.dao.DiskMapper;
+import com.itdan.document.dao.DocumentFileMapper;
 import com.itdan.document.domain.Disk;
 import com.itdan.document.domain.DocumentFile;
 import com.itdan.document.service.DocumentService;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,10 +30,13 @@ public class DocumentServiceImpl implements DocumentService {
     @Autowired
     private DiskMapper diskMapper;
     @Autowired
+    private DocumentFileMapper documentFileMapper;
+
+    @Autowired
     private JedisClient jedisClient;
 
     @Value("${DISK_LIST_EXPIRE}")
-    private Integer DISK_LIST_EXPIRE;
+    private Integer DISK_LIST_EXPIRE;//磁盘信息存储在redis中的时间期限
 
     @Override
     public List<Disk> getDisk() {
@@ -138,6 +143,15 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
+    public DocumentReslut addDocumentFile(DocumentFile documentFile) {
+        if (documentFile!=null) {
+            documentFileMapper.addDocumentFile(documentFile);
+          return DocumentReslut.ok();
+        }
+        return DocumentReslut.build(400,"文档添加失败");
+    }
+
+    @Override
     public DocumentFile GetDocument(String diskName) {
 
         if (diskName!=null) {
@@ -151,5 +165,45 @@ public class DocumentServiceImpl implements DocumentService {
         return null;
     }
 
+
+
+
+    /**
+     * 输入指定文件夹名，将该文件夹下的所有文件遍历出来
+     * @param rootName 文件夹名
+     */
+    public  void listAllFile(File rootName){
+        if (rootName.exists()) {//判断文件是否存在
+            //获取该文件路径下的 所有文件
+            //获取所有文件的同时，我们需要将文件的相关内容存储s进数据库中。
+            // 根节点没有父类节点，我们需要将其父节点设置为0
+            //存储根目录
+            DocumentFile documentFile=new DocumentFile();
+            documentFile.setFileName(rootName.getName());
+            documentFile.setFileAddr(rootName.toString());
+            //子节点的不用设置了，我表设计错误啦，懒得改了。
+            //根目录代表最上层，父节节点设置为0
+            documentFile.setParentPoint(0);
+            documentFile.setDocument(rootName.getName());//内容就像保存名字吧
+            documentFile.setFileDate(new Date(rootName.lastModified()));//获取文件最后一次更改的时间
+            documentFile.setBackups(0);//0表示没有备份，1表示已经备份
+            documentFileMapper.addDocumentFile(documentFile);
+
+            File[]fs= rootName.listFiles();
+            if(fs!=null) {
+                for (File f : fs) {
+                    System.out.println(f);
+                    //将各节点分别保存至数据库中
+
+
+                    if (f.isDirectory() && f != null) {
+                        //继续遍历文件
+                        listAllFile(f);
+
+                    }
+                }
+            }
+        }
+    }
 
 }
