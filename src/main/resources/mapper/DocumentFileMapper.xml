@@ -6,7 +6,7 @@
     <result column="parent_point" property="parentPoint" jdbcType="INTEGER" />
     <result column="children_point" property="childrenPoint" jdbcType="INTEGER" />
     <result column="document" property="document" jdbcType="VARCHAR" />
-    <result column="file_size" property="fileSize" jdbcType="DOUBLE" />
+    <result column="file_size" property="fileSize" jdbcType="VARCHAR" />
     <result column="file_addr" property="fileAddr" jdbcType="VARCHAR" />
     <result column="file_name" property="fileName" jdbcType="VARCHAR" />
     <result column="file_date" property="fileDate" jdbcType="TIMESTAMP" />
@@ -17,7 +17,7 @@
 
   <!--添加文档对象-->
   <insert id="addDocumentFile" parameterType="com.itdan.document.domain.DocumentFile">
-    INSERT  into  disk
+    INSERT  into  document_file
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -25,14 +25,14 @@
       <if test="parentPoint != null" >
       parent_point,
     </if>
-      <if test="childrenPoint != null" >
-        children_point,
+      <if test="isParent != null" >
+        is_parent,
       </if>
       <if test="document != null" >
         document,
       </if>
       <if test="fileSize != null" >
-        file_size
+        file_size,
       </if>
       <if test="fileAddr != null" >
         file_addr,
@@ -44,10 +44,10 @@
         file_date,
       </if>
       <if test="backups != null" >
-        backups
+        backups,
       </if>
       <if test="changeDate != null" >
-        change_date
+        change_date,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -57,14 +57,14 @@
       <if test="parentPoint != null" >
         #{parentPoint,jdbcType=INTEGER},
       </if>
-      <if test="childrenPoint != null" >
-        #{childrenPoint,jdbcType=INTEGER},
+      <if test="isParent != null" >
+        #{isParent,jdbcType=INTEGER},
       </if>
       <if test="document != null" >
         #{document,jdbcType=VARCHAR},
       </if>
       <if test="fileSize != null" >
-        #{fileSize,jdbcType=DOUBLE},
+        #{fileSize,jdbcType=VARCHAR},
       </if>
       <if test="fileAddr != null" >
         #{fileAddr,jdbcType=VARCHAR},

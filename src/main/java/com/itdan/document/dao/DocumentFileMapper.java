@@ -15,4 +15,12 @@ public interface DocumentFileMapper {
     void addDocumentFile(DocumentFile documentFile);
 
 
+    /**
+     * 根据父类文件名获取父类ID
+     * @param parentName
+     * @return
+     */
+    Integer getParentId(String parentName);
+
+
 }

@@ -4,6 +4,7 @@ import com.itdan.document.dao.DiskMapper;
 import com.itdan.document.domain.Disk;
 import com.itdan.document.service.DocumentService;
 import com.itdan.document.utils.common.DocumentUtils;
+import com.itdan.document.utils.common.IDUtils;
 import com.itdan.document.utils.common.JsonUtils;
 import com.itdan.document.utils.result.DocumentReslut;
 import com.itdan.test.BaseTest;
@@ -199,6 +200,30 @@ public class DiskTest extends BaseTest {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         String dateTime=df.format(new Date(file.lastModified()));
         System.out.println("dateTime:"+dateTime);
+    }
+
+
+    @Test
+    public void testDiskDemo07() throws Exception{
+        //获取父类文件的测试
+        File file=new File("C:/Users/Administrator/Desktop/基础笔记PDF");
+        System.out.println(file.getParentFile());
+        System.out.println(file.getParentFile().getName());
+      //  C:\Users\Administrator\Desktop
+        //   Desktop
+    }
+
+    @Test
+    public void testDiskDemo() throws Exception{
+        // 测试遍历节点
+        File file=new File("C:/Users/Administrator/Desktop");
+        documentService.listAllFile(file);
+//        System.out.println((int)IDUtils.genItemId());
+//        System.out.println(Math.abs((int)IDUtils.genItemId()));
+//        System.out.println(IDUtils.genItemId());
+
+
+
     }
 
 

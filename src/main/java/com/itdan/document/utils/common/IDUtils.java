@@ -1,6 +1,7 @@
 package com.itdan.document.utils.common;
 
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * 各种id生成策略
@@ -38,7 +39,12 @@ public class IDUtils {
 		long id = new Long(str);
 		return id;
 	}
-	
+
+	//获取UUID的工具
+	public static String getUUID(){
+		return UUID.randomUUID().toString();
+	}
+
 	public static void main(String[] args) {
 		for(int i=0;i< 100;i++)
 		System.out.println(genItemId());

@@ -158,8 +158,7 @@ public class DocumentServiceImpl implements DocumentService {
             //获取磁盘根目录
             String rootName = DocumentUtils.getDiskRoot(diskName);
             if (StringUtils.isNotBlank(rootName)) {
-
-
+               return null;
             }
         }
         return null;
@@ -172,38 +171,63 @@ public class DocumentServiceImpl implements DocumentService {
      * 输入指定文件夹名，将该文件夹下的所有文件遍历出来
      * @param rootName 文件夹名
      */
-    public  void listAllFile(File rootName){
+    public void listAllFile(File rootName){
         if (rootName.exists()) {//判断文件是否存在
             //获取该文件路径下的 所有文件
             //获取所有文件的同时，我们需要将文件的相关内容存储s进数据库中。
             // 根节点没有父类节点，我们需要将其父节点设置为0
             //存储根目录
-            DocumentFile documentFile=new DocumentFile();
-            documentFile.setFileName(rootName.getName());
-            documentFile.setFileAddr(rootName.toString());
-            //子节点的不用设置了，我表设计错误啦，懒得改了。
-            //根目录代表最上层，父节节点设置为0
-            documentFile.setParentPoint(0);
-            documentFile.setDocument(rootName.getName());//内容就像保存名字吧
-            documentFile.setFileDate(new Date(rootName.lastModified()));//获取文件最后一次更改的时间
-            documentFile.setBackups(0);//0表示没有备份，1表示已经备份
+            DocumentFile documentFile= addDocument(rootName);
+            documentFile.setIsParent(1);//表示是为父节点
+            documentFile.setParentPoint(0); //根目录代表最上层，父节节点设置为0
             documentFileMapper.addDocumentFile(documentFile);
+            int parentId=0;
 
+            //遍历根目录下的文件
             File[]fs= rootName.listFiles();
             if(fs!=null) {
                 for (File f : fs) {
                     System.out.println(f);
-                    //将各节点分别保存至数据库中
-
-
-                    if (f.isDirectory() && f != null) {
+                     //将各节点分别保存至数据库中
+                     //保存文件信息
+                     DocumentFile document= addDocument(f);
+                    //判断文件是否为文件夹
+                    //保存父类节点
+                    document.setParentPoint(parentId);
+                    //获取父类节点ID
+                     parentId=document.getId();
+                    if (f.isDirectory()){
+                        //如果文件是文件夹，表示该文件为父类节点
+                        document.setIsParent(1);//表示是为父节点
+                        documentFileMapper.addDocumentFile(document);
                         //继续遍历文件
                         listAllFile(f);
-
                     }
+
                 }
             }
         }
+    }
+
+    /**
+     * 存储根目录
+     * @param f
+     */
+    public DocumentFile addDocument(File f){
+        //存储根目录
+        DocumentFile documentFile=new DocumentFile();
+        documentFile.setId(Math.abs((int)IDUtils.genItemId()));
+        documentFile.setFileName(f.getName());
+        documentFile.setFileAddr(f.toString());
+        //子节点的不用设置了，我表设计错误啦，懒得改了。
+        //根目录代表最上层，父节节点设置为0
+        // documentFile.setParentPoint(0);
+        documentFile.setDocument(f.getName());//内容就像保存名字吧
+        documentFile.setFileDate(new Date(f.lastModified()));//获取文件最后一次更改的时间
+        documentFile.setBackups(0);//0表示没有备份，1表示已经备份
+        documentFile.setFileSize(DocumentUtils.readableFileSize(f.length()));
+        documentFile.setChangeDate(new Date());
+        return documentFile;
     }
 
 }

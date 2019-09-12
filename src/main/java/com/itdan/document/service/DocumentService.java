@@ -5,6 +5,7 @@ import com.itdan.document.domain.DocumentFile;
 import com.itdan.document.utils.result.DocumentReslut;
 
 import javax.print.Doc;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -59,4 +60,9 @@ public interface DocumentService {
      */
     DocumentFile GetDocument(String diskName);
 
+    /**
+     * 遍历文件存入数据库中
+     * @param rootName
+     */
+    void listAllFile(File rootName);
 }

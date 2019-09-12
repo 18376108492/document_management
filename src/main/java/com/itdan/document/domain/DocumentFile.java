@@ -1,5 +1,7 @@
 package com.itdan.document.domain;
 
+import com.itdan.document.utils.common.IDUtils;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -11,11 +13,11 @@ public class DocumentFile implements Serializable {
 
     private Integer parentPoint;//父类节点
 
-    private Integer childrenPoint;//子类节点
+    private Integer isParent;//是否为父节点,0表示不是父类节点,1表示为父类节点
 
     private String document;//文件内容
 
-    private Double fileSize;//文件大小
+    private String fileSize;//文件大小
 
     private String fileAddr;//文件地址
 
@@ -43,12 +45,12 @@ public class DocumentFile implements Serializable {
         this.parentPoint = parentPoint;
     }
 
-    public Integer getChildrenPoint() {
-        return childrenPoint;
+    public Integer getIsParent() {
+        return isParent;
     }
 
-    public void setChildrenPoint(Integer childrenPoint) {
-        this.childrenPoint = childrenPoint;
+    public void setIsParent(Integer isParent) {
+        this.isParent = isParent;
     }
 
     public String getDocument() {
@@ -59,11 +61,11 @@ public class DocumentFile implements Serializable {
         this.document = document == null ? null : document.trim();
     }
 
-    public Double getFileSize() {
+    public String getFileSize() {
         return fileSize;
     }
 
-    public void setFileSize(Double fileSize) {
+    public void setFileSize(String fileSize) {
         this.fileSize = fileSize;
     }
 
@@ -112,7 +114,7 @@ public class DocumentFile implements Serializable {
         return "DocumentFile{" +
                 "id=" + id +
                 ", parentPoint=" + parentPoint +
-                ", childrenPoint=" + childrenPoint +
+                ", isParent=" + isParent +
                 ", document='" + document + '\'' +
                 ", fileSize=" + fileSize +
                 ", fileAddr='" + fileAddr + '\'' +
