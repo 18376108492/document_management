@@ -1,9 +1,11 @@
 package com.itdan.document.utils.common;
 
 import com.itdan.document.domain.DocumentFile;
+import com.itdan.document.utils.result.FancytreeNode;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -74,6 +76,42 @@ public class DocumentUtils {
         return dateTime;
     }
 
-
+    /**
+     * 获取文件，并组成树形结构
+     * @param list
+     * @param key
+     * @param filepath
+     * @param parentid
+     * @throws FileNotFoundException
+     */
+    public static void getFile(List<FancytreeNode>list,Integer key,String filepath,int parentid) throws FileNotFoundException {
+        File file = new File(filepath);
+        //1.判断文件
+        if(!file.exists()){
+            throw new FileNotFoundException("文件不存在");
+        }
+        //2.是文件该怎么执行
+        if(file.isFile()){
+            String name = file.getName();
+            String path = file.getAbsolutePath();
+            FancytreeNode tree = new FancytreeNode(key++,name,false,path,parentid);
+            list.add(tree);
+            return ;
+        }
+        //3.获取文件夹路径下面的所有文件递归调用；
+        if(file.isDirectory()){
+            String name = file.getName();
+            String path = file.getAbsolutePath();
+            FancytreeNode tree = new FancytreeNode(key++,name,true,path,parentid);
+            list.add(tree);
+            String[] str = file.list();
+            String parent = file.getParent();
+            for (int i = 0;i<str.length;i++){
+                String s = str[i];
+                String newFilePath = path+"\\"+s;//根据当前文件夹，拼接其下文文件形成新的路径
+                getFile(list,key,newFilePath,tree.getKey());
+            }
+        }
+    }
 
 }

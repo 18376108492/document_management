@@ -214,7 +214,7 @@ public class DiskTest extends BaseTest {
     }
 
     @Test
-    public void testDiskDemo() throws Exception{
+    public void testDiskDemo08() throws Exception{
         // 测试遍历节点
         File file=new File("C:/Users/Administrator/Desktop");
         documentService.listAllFile(file);
@@ -222,8 +222,15 @@ public class DiskTest extends BaseTest {
 //        System.out.println(Math.abs((int)IDUtils.genItemId()));
 //        System.out.println(IDUtils.genItemId());
 
+    }
 
-
+    @Test
+    public void testDiskDemo09() throws Exception{
+         //FSDirectory.open();
+        String strPath="C:/Users/Administrator/Desktop";
+        //得到当前路径下的所有文件和文件夹
+       // String[] dirs = Directory.GetDirectories(strPath);
+        //String[] files = Directory.GetFiles(strPath);
     }
 
 

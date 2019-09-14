@@ -16,18 +16,21 @@ public interface DocumentService {
 
     /**
      * 获取本地磁盘
+     *
      * @return
      */
     List<Disk> getDisk();
 
     /**
      * 从数据中读取磁盘信息
+     *
      * @return
      */
     List<Disk> getDiskList();
 
     /**
      * 根据ID更新相应的磁盘信息
+     *
      * @param diskId 磁盘ID
      * @return
      */
@@ -35,19 +38,22 @@ public interface DocumentService {
 
     /**
      * 根据ID获取相应的磁盘信息
+     *
      * @param diskId 磁盘ID
      * @return
      */
     Disk getDiskById(Integer diskId);
 
     /**
-     *  添加磁盘信息到数据库中
+     * 添加磁盘信息到数据库中
+     *
      * @param disk 磁盘对象
      */
     DocumentReslut addDisk(Disk disk);
 
     /**
      * 添加磁盘根目录下的所有文件到数据库中
+     *
      * @param documentFile 文档对象
      * @return
      */
@@ -55,6 +61,7 @@ public interface DocumentService {
 
     /**
      * 根据相应的磁盘名获取该磁盘的文件
+     *
      * @param diskName 磁盘名
      * @return 该磁盘的全部文档
      */
@@ -62,7 +69,15 @@ public interface DocumentService {
 
     /**
      * 遍历文件存入数据库中
+     *
      * @param rootName
      */
     void listAllFile(File rootName);
+
+    /**
+     * 根据父类ID获取相应的文档对象
+     * @param parentId
+     * @return
+     */
+    List<DocumentFile> getListByParentId(Integer parentId);
 }

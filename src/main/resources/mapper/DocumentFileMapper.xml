@@ -84,4 +84,12 @@
     </trim>
   </insert>
 
+  <!--根据父类ID获取相应的文档对象-->
+  <select id="getListByParentId" parameterType="Integer" resultMap="BaseResultMap">
+    select * from document_file
+    where
+    <if test="parentId != null" >
+    parent_point=#{parentId}
+    </if>
+  </select>
 </mapper>

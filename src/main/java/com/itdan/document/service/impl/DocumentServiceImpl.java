@@ -125,7 +125,7 @@ public class DocumentServiceImpl implements DocumentService {
     public Disk getDiskById(Integer diskId) {
         //根据ID获取相应磁盘信息
       if(diskId==null) {
-          return null;
+          return new Disk();
       }
           Disk disk= diskMapper.getDiskById(diskId);
           return disk;
@@ -161,7 +161,7 @@ public class DocumentServiceImpl implements DocumentService {
                return null;
             }
         }
-        return null;
+        return new DocumentFile();
     }
 
 
@@ -178,39 +178,28 @@ public class DocumentServiceImpl implements DocumentService {
             // 根节点没有父类节点，我们需要将其父节点设置为0
             //存储根目录
             DocumentFile documentFile= addDocument(rootName);
+            documentFile.setId(10000);//设置父类节点ID为10000
             documentFile.setIsParent(1);//表示是为父节点
             documentFile.setParentPoint(0); //根目录代表最上层，父节节点设置为0
             documentFileMapper.addDocumentFile(documentFile);
-            int parentId=0;
-
-            //遍历根目录下的文件
-            File[]fs= rootName.listFiles();
-            if(fs!=null) {
-                for (File f : fs) {
-                    System.out.println(f);
-                     //将各节点分别保存至数据库中
-                     //保存文件信息
-                     DocumentFile document= addDocument(f);
-                    //判断文件是否为文件夹
-                    //保存父类节点
-                    document.setParentPoint(parentId);
-                    //获取父类节点ID
-                     parentId=document.getId();
-                    if (f.isDirectory()){
-                        //如果文件是文件夹，表示该文件为父类节点
-                        document.setIsParent(1);//表示是为父节点
-                        documentFileMapper.addDocumentFile(document);
-                        //继续遍历文件
-                        listAllFile(f);
-                    }
-
-                }
-            }
+            int parentId=10000;//设置第二层目录的父类节点ID
+            //获取所有文件
+            getAllDocument(rootName,parentId);
         }
     }
 
+    @Override
+    public List<DocumentFile> getListByParentId(Integer parentId) {
+       List<DocumentFile> list=new ArrayList<>();
+       if (parentId!=null) {
+           list=documentFileMapper.getListByParentId(parentId);
+           return list;
+       }
+        return list;
+    }
+
     /**
-     * 存储根目录
+     * 存文件
      * @param f
      */
     public DocumentFile addDocument(File f){
@@ -228,6 +217,38 @@ public class DocumentServiceImpl implements DocumentService {
         documentFile.setFileSize(DocumentUtils.readableFileSize(f.length()));
         documentFile.setChangeDate(new Date());
         return documentFile;
+    }
+
+    /**
+     * 获取文件夹下的所有文件
+     * @param fileName
+     * @param parentId
+     */
+    public void getAllDocument(File fileName,Integer parentId){
+        //遍历根目录下的文件
+        File[]fs= fileName.listFiles();
+        if(fs!=null) {
+            for (File f : fs) {
+                System.out.println(f);
+                //将各节点分别保存至数据库中
+                //保存文件信息
+                DocumentFile document= addDocument(f);
+                //判断文件是否为文件夹
+                //保存父类节点
+                document.setParentPoint(parentId);
+
+                if (f.isDirectory()){
+                    //如果文件是文件夹，表示该文件为父类节点
+                    document.setIsParent(1);//表示是为父节点
+                    documentFileMapper.addDocumentFile(document);
+                    //继续遍历文件
+                    //获取父类节点ID
+                   // parentId=document.getId();
+                    getAllDocument(f,parentId);
+                }
+
+            }
+        }
     }
 
 }
