@@ -1,8 +1,102 @@
-2019-09-14 20:00:20.619 [main] INFO  com.alibaba.druid.pool.DruidDataSource -
+2019-09-15 12:29:35.328 [main] INFO  com.alibaba.druid.pool.DruidDataSource -
 				{dataSource-1} inited
-2019-09-14 20:03:50.766 [main] INFO  com.alibaba.druid.pool.DruidDataSource -
-				{dataSource-1} inited
-2019-09-14 20:03:51.579 [Thread-1] INFO  com.alibaba.druid.pool.DruidDataSource -
+2019-09-15 12:29:36.712 [Thread-1] INFO  com.alibaba.druid.pool.DruidDataSource -
 				{dataSource-1} closed
-2019-09-14 20:11:52.799 [main] INFO  com.alibaba.druid.pool.DruidDataSource -
+2019-09-15 12:32:48.707 [main] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} inited
+2019-09-15 12:32:49.421 [Thread-1] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} closed
+2019-09-15 12:33:17.762 [main] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} inited
+2019-09-15 12:33:18.470 [Thread-1] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} closed
+2019-09-15 14:35:30.764 [main] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} inited
+2019-09-15 14:35:31.814 [Thread-1] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} closed
+2019-09-15 14:40:23.851 [main] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} inited
+2019-09-15 14:40:24.597 [Thread-1] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} closed
+2019-09-15 14:42:11.347 [main] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} inited
+2019-09-15 14:42:11.963 [Thread-1] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} closed
+2019-09-15 14:42:55.306 [main] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} inited
+2019-09-15 14:42:56.340 [Thread-1] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} closed
+2019-09-15 14:47:57.677 [main] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} inited
+2019-09-15 14:47:58.400 [Thread-1] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} closed
+2019-09-15 14:48:19.230 [main] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} inited
+2019-09-15 14:48:20.042 [Thread-1] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} closed
+2019-09-15 14:50:48.554 [main] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} inited
+2019-09-15 14:50:49.103 [Thread-1] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} closed
+2019-09-15 14:51:09.054 [main] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} inited
+2019-09-15 14:51:10.002 [Thread-1] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} closed
+2019-09-15 20:37:51.161 [main] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} inited
+2019-09-15 20:37:52.700 [Thread-1] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} closed
+2019-09-15 20:38:29.598 [main] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} inited
+2019-09-15 20:38:30.367 [Thread-1] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} closed
+2019-09-15 20:42:18.596 [main] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} inited
+2019-09-15 20:42:19.288 [Thread-1] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} closed
+2019-09-15 20:44:15.611 [main] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} inited
+2019-09-15 20:44:16.478 [Thread-1] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} closed
+2019-09-15 20:46:22.998 [main] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} inited
+2019-09-15 20:46:23.755 [Thread-1] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} closed
+2019-09-15 20:50:59.609 [main] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} inited
+2019-09-15 20:51:00.391 [Thread-1] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} closed
+2019-09-15 21:18:08.603 [main] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} inited
+2019-09-15 21:18:09.151 [Thread-1] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} closed
+2019-09-15 21:30:14.215 [main] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} inited
+2019-09-15 21:30:14.792 [Thread-1] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} closed
+2019-09-15 21:32:37.308 [main] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} inited
+2019-09-15 21:32:37.887 [Thread-1] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} closed
+2019-09-15 21:34:47.423 [main] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} inited
+2019-09-15 21:39:35.139 [main] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} inited
+2019-09-15 21:39:35.693 [Thread-1] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} closed
+2019-09-15 21:40:07.494 [main] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} inited
+2019-09-15 21:40:08.371 [Thread-1] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} closed
+2019-09-15 21:42:59.790 [main] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} inited
+2019-09-15 21:43:00.679 [Thread-1] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} closed
+2019-09-15 21:43:51.764 [main] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} inited
+2019-09-15 21:46:46.275 [main] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} inited
+2019-09-15 21:46:47.638 [Thread-1] INFO  com.alibaba.druid.pool.DruidDataSource -
+				{dataSource-1} closed
+2019-09-15 21:53:25.068 [main] INFO  com.alibaba.druid.pool.DruidDataSource -
 				{dataSource-1} inited

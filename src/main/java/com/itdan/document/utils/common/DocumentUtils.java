@@ -1,6 +1,5 @@
 package com.itdan.document.utils.common;
 
-import com.itdan.document.domain.DocumentFile;
 import com.itdan.document.utils.result.FancytreeNode;
 import org.apache.commons.lang.StringUtils;
 
@@ -78,10 +77,10 @@ public class DocumentUtils {
 
     /**
      * 获取文件，并组成树形结构
-     * @param list
-     * @param key
-     * @param filepath
-     * @param parentid
+     * @param list 数据存储集合
+     * @param key  节点ID
+     * @param filepath 文件路径
+     * @param parentid 父类节点ID
      * @throws FileNotFoundException
      */
     public static void getFile(List<FancytreeNode>list,Integer key,String filepath,int parentid) throws FileNotFoundException {
@@ -96,13 +95,14 @@ public class DocumentUtils {
             String path = file.getAbsolutePath();
             FancytreeNode tree = new FancytreeNode(key++,name,false,path,parentid);
             list.add(tree);
-            return ;
+            return ;//跳至for循环处
         }
         //3.获取文件夹路径下面的所有文件递归调用；
         if(file.isDirectory()){
             String name = file.getName();
             String path = file.getAbsolutePath();
-            FancytreeNode tree = new FancytreeNode(key++,name,true,path,parentid);
+            Integer id=key+parentid;
+            FancytreeNode tree = new FancytreeNode(id++,name,true,path,parentid);
             list.add(tree);
             String[] str = file.list();
             String parent = file.getParent();

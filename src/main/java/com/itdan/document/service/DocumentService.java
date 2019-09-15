@@ -3,15 +3,17 @@ package com.itdan.document.service;
 import com.itdan.document.domain.Disk;
 import com.itdan.document.domain.DocumentFile;
 import com.itdan.document.utils.result.DocumentReslut;
+import com.itdan.document.utils.result.FancytreeNode;
 
 import javax.print.Doc;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 /**
  * 业务逻辑层接口
  */
-public interface DocumentService {
+public interface DocumentService  {
 
 
     /**
@@ -68,11 +70,12 @@ public interface DocumentService {
     DocumentFile GetDocument(String diskName);
 
     /**
-     * 遍历文件存入数据库中
-     *
-     * @param rootName
+     * 输入指定文件夹名，将该文件夹下的所有文件遍历出来
+     * @param rootName 文件路径
+     * @return  树形节点集合
+     * @throws FileNotFoundException
      */
-    void listAllFile(File rootName);
+    List<FancytreeNode> listAllFile(String  rootName) throws FileNotFoundException;
 
     /**
      * 根据父类ID获取相应的文档对象

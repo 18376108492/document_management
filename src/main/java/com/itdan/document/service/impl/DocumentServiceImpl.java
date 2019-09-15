@@ -4,6 +4,7 @@ import com.itdan.document.dao.DiskMapper;
 import com.itdan.document.dao.DocumentFileMapper;
 import com.itdan.document.domain.Disk;
 import com.itdan.document.domain.DocumentFile;
+import com.itdan.document.utils.result.FancytreeNode;
 import com.itdan.document.service.DocumentService;
 import com.itdan.document.utils.common.DocumentUtils;
 import com.itdan.document.utils.common.IDUtils;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,6 +39,12 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Value("${DISK_LIST_EXPIRE}")
     private Integer DISK_LIST_EXPIRE;//磁盘信息存储在redis中的时间期限
+
+    @Value("${FILE_KEY}")
+    private Integer FILE_KEY;//设置根目录id为1000
+
+    @Value("${KEY_PARENT_ID}")
+    private Integer KEY_PARENT_ID;//设置根目录父类ID为0
 
     @Override
     public List<Disk> getDisk() {
@@ -165,27 +173,22 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
 
-
-
-    /**
-     * 输入指定文件夹名，将该文件夹下的所有文件遍历出来
-     * @param rootName 文件夹名
-     */
-    public void listAllFile(File rootName){
-        if (rootName.exists()) {//判断文件是否存在
-            //获取该文件路径下的 所有文件
-            //获取所有文件的同时，我们需要将文件的相关内容存储s进数据库中。
-            // 根节点没有父类节点，我们需要将其父节点设置为0
-            //存储根目录
-            DocumentFile documentFile= addDocument(rootName);
-            documentFile.setId(10000);//设置父类节点ID为10000
-            documentFile.setIsParent(1);//表示是为父节点
-            documentFile.setParentPoint(0); //根目录代表最上层，父节节点设置为0
-            documentFileMapper.addDocumentFile(documentFile);
-            int parentId=10000;//设置第二层目录的父类节点ID
-            //获取所有文件
-            getAllDocument(rootName,parentId);
-        }
+    public List<FancytreeNode> listAllFile(String rootName) throws FileNotFoundException {
+       if(StringUtils.isNotBlank(rootName)) {
+           //树形节点集合
+           List<FancytreeNode> nodeList = new ArrayList<>();
+           //设置根目录节点ID
+           Integer key = FILE_KEY;
+           //设置根目录父类ID为0，因为根目录没有父类
+           Integer parentId = KEY_PARENT_ID;
+           try {
+               getAllFile(nodeList, key, rootName, parentId);
+           } catch (Exception e) {
+               e.printStackTrace();
+           }
+           return nodeList;
+       }
+        return new ArrayList<>();
     }
 
     @Override
@@ -198,14 +201,27 @@ public class DocumentServiceImpl implements DocumentService {
         return list;
     }
 
+
     /**
-     * 存文件
-     * @param f
+     * 将遍历出的文件存储进数据库中
+     * @param f 文件
+     * @param key 文件ID
+     * @param parentId 文件父类ID
+     * @return
      */
-    public DocumentFile addDocument(File f){
+    public DocumentFile addDocument(File f,Integer key,Integer parentId){
         //存储根目录
         DocumentFile documentFile=new DocumentFile();
-        documentFile.setId(Math.abs((int)IDUtils.genItemId()));
+        //设置文件ID
+        documentFile.setId(key);
+        //设置文件父类ID
+        documentFile.setParentPoint(parentId);
+        //设置文件是否为文件夹
+        if(f.isDirectory()){
+            documentFile.setIsParent(1);
+        }else {
+            documentFile.setIsParent(0);
+        }
         documentFile.setFileName(f.getName());
         documentFile.setFileAddr(f.toString());
         //子节点的不用设置了，我表设计错误啦，懒得改了。
@@ -220,35 +236,65 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     /**
-     * 获取文件夹下的所有文件
-     * @param fileName
-     * @param parentId
+     * 获取所有文件，存入数据库，并组成树形结构
+     * @param nodeList 树形节点集合
+     * @param key 文件ID
+     * @param fileNam 文件路径
+     * @param parentId 父类节点ID
      */
-    public void getAllDocument(File fileName,Integer parentId){
-        //遍历根目录下的文件
-        File[]fs= fileName.listFiles();
-        if(fs!=null) {
-            for (File f : fs) {
-                System.out.println(f);
-                //将各节点分别保存至数据库中
-                //保存文件信息
-                DocumentFile document= addDocument(f);
-                //判断文件是否为文件夹
-                //保存父类节点
-                document.setParentPoint(parentId);
-
-                if (f.isDirectory()){
-                    //如果文件是文件夹，表示该文件为父类节点
-                    document.setIsParent(1);//表示是为父节点
-                    documentFileMapper.addDocumentFile(document);
-                    //继续遍历文件
-                    //获取父类节点ID
-                   // parentId=document.getId();
-                    getAllDocument(f,parentId);
-                }
-
-            }
+    public void getAllFile(List<FancytreeNode> nodeList,
+                           Integer key,
+                           String fileNam,
+                           Integer parentId)throws FileNotFoundException{
+        File file=new File(fileNam);
+        //使用树形节点集合来存储对象
+        //判断文件是否存在
+        if (!file.exists()) {
+            throw new FileNotFoundException("该文件不存在");
         }
-    }
+        //获取所有文件的同时，我们需要将文件的相关内容存储s进数据库中。
 
+        //获取该文件路径下的 所有文件
+       // File [] fs=file.listFiles();
+        //遍历文件
+       // for (File f:fs){
+
+            //当为文件时
+            if (file.isFile()){
+                String fileName=file.getName();//获取文件名
+                String path = file.getAbsolutePath();//获取路径
+                key=Math.abs((int)IDUtils.genItemId());//设置新ID
+                //添加树形节点
+                FancytreeNode tree = new FancytreeNode(key,fileName,false,path,parentId);
+                nodeList.add(tree);
+                //调用添加文件的方法
+                DocumentFile document= addDocument(file,key,parentId);
+                documentFileMapper.addDocumentFile(document);
+                //返回
+                return;
+            }
+
+            //当为文件夹时
+            if (file.isDirectory()){
+                String name = file.getName();
+                String path = file.getAbsolutePath();
+                key=Math.abs((int)IDUtils.genItemId());//设置新ID
+                //添加树形节点
+                FancytreeNode tree = new FancytreeNode(key,name,true,path,parentId);
+                nodeList.add(tree);
+                //添加文件
+                DocumentFile document= addDocument(file,key,parentId);
+                documentFileMapper.addDocumentFile(document);
+                String[] str = file.list();
+                String parent = file.getParent();
+                for (int i = 0;i<str.length;i++){
+                    String s = str[i];
+                    String newFilePath = path+"\\"+s;//根据当前文件夹，拼接其下文文件形成新的路径
+                    getAllFile(nodeList,key,newFilePath,tree.getKey());
+                }
+           // }
+        }
+
+
+    }
 }
