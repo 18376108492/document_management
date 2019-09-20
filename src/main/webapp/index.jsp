@@ -37,7 +37,7 @@
                 <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
                     <span class="am-icon-users"></span> 邮箱管理员 <span class="am-icon-caret-down"></span>
                 </a>
-                <ul class="am-dropdown-content">
+                <ul class="am-dropdown-content" >
                 	  <li><a href="/admin/login"><span class="am-icon-user"></span> 登入</a></li>
                     <li><a href="/admin/data"><span class="am-icon-user"></span> 资料</a></li>
                     <li><a href="/admin/setUp"><span class="am-icon-cog"></span> 设置</a></li>
@@ -94,7 +94,7 @@
 
                 <div class="am-tabs-bd admin-tab-show-body">
                     <div class="am-tab-panel am-active" style="height: 100%">
-                        <iframe src="html/main.html" class="admin-iframe-html" iframe-uuid="uuid-main" style="width: 100%;height: 100%;"></iframe>
+                        <iframe src="/disk/main" class="admin-iframe-html" iframe-uuid="uuid-main" style="width: 100%;height: 100%;"></iframe>
                     </div>
                 </div>
             </div>
@@ -119,11 +119,11 @@
 <!--[if (gte IE 9)|!(IE)]><!-->
 <!--<![endif]-->
 <script></script>
-<script src="js/jquery.min.js"></script>
-<script src="base-component/amazeui/js/amazeui.min.js"></script>
-<script src="base-component/layer/layer.js"></script>
-<script src="assets/js/config.js"></script>
-<script src="assets/js/app.js"></script>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../base-component/amazeui/js/amazeui.min.js"></script>
+<script src="../../base-component/layer/layer.js"></script>
+<script src="../../assets/js/config.js"></script>
+<script src="../../assets/js/app.js"></script>
 <script>
 
 </script>

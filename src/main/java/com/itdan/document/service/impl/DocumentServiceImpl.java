@@ -71,30 +71,30 @@ public class DocumentServiceImpl implements DocumentService {
     public List<Disk> getDiskList() {
         //需要确定好个磁盘的ID
         //先判断redis中是否存在磁盘信息，如果不存在就从数据库中查询。
-        try{
-            //从redis中获取数据
-            String json=jedisClient.get("DISK_LIST");
-            List<Disk> diskList=JsonUtils.jsonToList(json,Disk.class);
-            if(StringUtils.isNotBlank(json)){
-               return diskList;
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+//        try{
+//            //从redis中获取数据
+//            String json=jedisClient.get("DISK_LIST");
+//            List<Disk> diskList=JsonUtils.jsonToList(json,Disk.class);
+//            if(StringUtils.isNotBlank(json)){
+//               return diskList;
+//            }
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
 
         //从数据中查询磁盘缓存数据
         List<Disk>diskList= diskMapper.getDiskList();
 
         //将从数据中查询的磁盘信息存储到redis中
         //查询数据库,把结果添加到redis缓存中
-        try {
-            //设置缓存的key和value值
-            jedisClient.set("DISK_LIST",JsonUtils.objectToJson(diskList));
-            //设置缓存过期时间
-            jedisClient.expire("DISK_LIST",DISK_LIST_EXPIRE);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+//        try {
+//            //设置缓存的key和value值
+//            jedisClient.set("DISK_LIST",JsonUtils.objectToJson(diskList));
+//            //设置缓存过期时间
+//            jedisClient.expire("DISK_LIST",DISK_LIST_EXPIRE);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
         return diskList;
     }
 

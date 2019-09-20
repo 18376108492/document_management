@@ -5,22 +5,22 @@
 <head>
     <meta charset="UTF-8">
     <title>主页</title>
-    <link rel="stylesheet" href="../base-component/amazeui/css/amazeui.min.css"/>
-    <link rel="stylesheet" href="../assets/css/admin.css">
+    <link rel="stylesheet" href="../../base-component/amazeui/css/amazeui.min.css"/>
+    <link rel="stylesheet" href="../../assets/css/admin.css">
     <!--<link rel="stylesheet" href="../css/demo.css" type="text/css">-->
-	<link rel="stylesheet" href="../css/zTreeStyle/zTreeStyle.css" type="text/css">
+	<link rel="stylesheet" href="../../css/zTreeStyle/zTreeStyle.css" type="text/css">
     <!--<script src="../base-component/jquery/jquery.min.js"></script>
     <script src="../assets/js/jquery-ui-1.10.4.min.js"></script>-->
-      <script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
-		 <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
-         <script type="text/javascript" src="../js/jquery.ztree.all.js"></script> 
+      <script type="text/javascript" src="../../js/jquery-1.11.3.min.js"></script>
+		 <script type="text/javascript" src="../../js/jquery-ui-1.10.4.min.js"></script>
+         <script type="text/javascript" src="../../js/jquery.ztree.all.js"></script>
 </head>
 <body style="overflow-y: auto">
 <div class="am-cf am-padding">
     <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">首页</strong> / <small>本地磁盘</small></div>
 </div>
 
-<ul class="am-avg-sm-1 am-avg-md-4 am-margin am-padding am-text-center admin-content-list ">
+<ul class="am-avg-sm-1 am-avg-md-4 am-margin am-padding am-text-center admin-content-list " id="load-disk">
     <li><a href="#" class="am-text-success"><span id="refsh" class="am-icon-btn am-icon-file-text"></span><br/>资料盘<br/>已用空间:50G<br/>可用空间:60G</a></li>
     <li><a href="#" class="am-text-warning"><span class="am-icon-btn am-icon-briefcase"></span><br/>办公盘<br/>已用空间:50G<br/>可用空间:60G</a></li>
     <li><a href="#" class="am-text-danger"><span class="am-icon-btn am-icon-recycle"></span><br/>回收盘<br/>已用空间:50G<br/>可用空间:60G</a></li>
@@ -110,9 +110,10 @@
     </div>
     </div>
 <!--<![endif]-->
-<script src="../js/ztree_document.js"></script>
-<script src="../base-component/amazeui/js/amazeui.min.js"></script>
-<script src="../base-component/layer/layer.js"></script>
+ <script src="../../js/load_main.js" ></script>
+<script src="../../js/ztree_document.js"></script>
+<script src="../../base-component/amazeui/js/amazeui.min.js"></script>
+<script src="../../base-component/layer/layer.js"></script>
   <!--<script src="../js/ztree_document.js"></script>-->
 <script>
     $('#refsh').on('click',function(){
