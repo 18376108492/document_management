@@ -10,7 +10,7 @@ var TAB_JSON = {
     list: [
         {
             listName: '首页',/*tab名称*/
-            listUrl: 'html/main.jsp',/*页面路径*/
+            listUrl: 'disk/main',/*页面路径*/
             listUuid: 'uuid-main',/*tab唯一标识*/
             listIcon: 'am-icon-home',/*左侧显示图标*/
             listRightIcon: '',/*右侧显示图标*/
@@ -30,7 +30,7 @@ var TAB_JSON = {
             subList: [
                 {
                     listName: '邮箱管理',
-                    listUrl: 'html/personal-data.jsp',
+                    listUrl: 'data/personal-data',
                     listUuid: 'uuid-personal-data',
                     listIcon: 'am-icon-comment',
                     listRightIcon: 'am-icon-star',
@@ -50,7 +50,7 @@ var TAB_JSON = {
                 },
                 {
                     listName: '历史记录',
-                    listUrl: 'html/main.jsp',
+                    listUrl: 'document/histroy',
                     listUuid: 'uuid-help',
                     listIcon: 'am-icon-clock-o',
                     listRightIcon: '',
@@ -60,7 +60,7 @@ var TAB_JSON = {
                 },
                  {
                     listName: '资料备份',
-                    listUrl: 'html/main.jsp',
+                    listUrl: 'document/backups.jsp',
                     listUuid: 'uuid-help',
                     listIcon: 'am-icon-arrow-down',
                     listRightIcon: '',
