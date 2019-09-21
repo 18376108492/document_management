@@ -17,14 +17,11 @@
 </head>
 <body style="overflow-y: auto">
 <div class="am-cf am-padding">
-    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">首页</strong> / <small>本地磁盘</small></div>
+    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">首页</strong> / <small>本地磁盘</small> <small><button onclick="javascript:loadOnclick()">初始磁盘</button></small></div>
 </div>
 
-<ul class="am-avg-sm-1 am-avg-md-4 am-margin am-padding am-text-center admin-content-list " id="load-disk">
-    <li><a href="#" class="am-text-success"><span id="refsh" class="am-icon-btn am-icon-file-text"></span><br/>资料盘<br/>已用空间:50G<br/>可用空间:60G</a></li>
-    <li><a href="#" class="am-text-warning"><span class="am-icon-btn am-icon-briefcase"></span><br/>办公盘<br/>已用空间:50G<br/>可用空间:60G</a></li>
-    <li><a href="#" class="am-text-danger"><span class="am-icon-btn am-icon-recycle"></span><br/>回收盘<br/>已用空间:50G<br/>可用空间:60G</a></li>
-    <li><a href="#" class="am-text-secondary"><span class="am-icon-btn am-icon-user-md"></span><br/>人事盘<br/>已用空间:50G<br/>可用空间:60G</a></li>
+<ul    class="am-avg-sm-1 am-avg-md-4 am-margin am-padding am-text-center admin-content-list ">
+    <p id="load-disk"></p>>
 </ul>
 
 
@@ -120,6 +117,8 @@
         alert(window.location.href);
         window.location.href="http://blog.csdn.net/";
     });
+
+
 </script>
 </body>
 </html>

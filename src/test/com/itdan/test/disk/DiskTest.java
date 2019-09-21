@@ -4,6 +4,7 @@ import com.itdan.document.dao.DiskMapper;
 import com.itdan.document.domain.Disk;
 import com.itdan.document.service.DocumentService;
 import com.itdan.document.utils.common.DocumentUtils;
+import com.itdan.document.utils.common.JsonUtils;
 import com.itdan.document.utils.result.FancytreeNode;
 import com.itdan.test.BaseTest;
 import org.junit.Test;
@@ -308,6 +309,14 @@ public class DiskTest extends BaseTest {
       //String realPath = request.getSession().getServletContext().getRealPath("/Storageresources");
       //Test.readFileToJsp(realPath);
 
+    }
+
+    @Test
+    public void testDiskDemo11() throws Exception{
+     //测试磁盘查询控制
+
+         List<Disk> diskList=documentService.getDiskList();
+        System.out.println(JsonUtils.objectToJson("json"+diskList));
     }
 
 }

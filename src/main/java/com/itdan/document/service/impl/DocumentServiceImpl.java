@@ -165,7 +165,10 @@ public class DocumentServiceImpl implements DocumentService {
         if (diskName!=null) {
             //获取磁盘根目录
             String rootName = DocumentUtils.getDiskRoot(diskName);
-            if (StringUtils.isNotBlank(rootName)) {
+             if (StringUtils.isNotBlank(rootName)) {
+
+
+
                return null;
             }
         }
