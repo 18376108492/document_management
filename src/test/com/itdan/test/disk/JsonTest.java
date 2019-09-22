@@ -3,7 +3,6 @@ package com.itdan.test.disk;
 import com.itdan.document.domain.Disk;
 import com.itdan.document.service.DocumentService;
 import com.itdan.document.utils.common.JsonUtils;
-import com.itdan.document.utils.result.DocumentReslut;
 import com.itdan.test.BaseTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,4 +32,6 @@ public class JsonTest extends BaseTest {
        List<Disk>  reslut=documentService.getDiskList();
         System.out.println(reslut.toString());
     }
+
+
 }

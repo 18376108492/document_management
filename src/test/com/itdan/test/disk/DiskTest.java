@@ -5,7 +5,7 @@ import com.itdan.document.domain.Disk;
 import com.itdan.document.service.DocumentService;
 import com.itdan.document.utils.common.DocumentUtils;
 import com.itdan.document.utils.common.JsonUtils;
-import com.itdan.document.utils.result.FancytreeNode;
+import com.itdan.document.domain.FancytreeNode;
 import com.itdan.test.BaseTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -206,8 +206,12 @@ public class DiskTest extends BaseTest {
         File file = new File("C:/Users/Administrator/Desktop/基础笔记PDF");
         System.out.println(file.getParentFile());
         System.out.println(file.getParentFile().getName());
+        System.out.println(file.getPath());
+        System.out.println(file.getAbsolutePath());
         //  C:\Users\Administrator\Desktop
         //   Desktop
+        //C:\Users\Administrator\Desktop\基础笔记PDF
+        //C:\Users\Administrator\Desktop\基础笔记PDF
     }
 
     @Test
@@ -238,14 +242,14 @@ public class DiskTest extends BaseTest {
 
         for (int i = 0; i < list.size(); i++) {
             FancytreeNode tree = list.get(i);
-            System.out.println("id:" + tree.getKey() + "  parentId:" + tree.getParentId() + "==" + tree.getPath());
+            System.out.println("id:" + tree.getId() + "  parentId:" + tree.getpId() + "==" + tree.getPath());
         }
 
     }
 
     @Test
     public void testDiskDemo10() throws Exception {
-        String strPath = "C:/Users/Administrator/Desktop";
+        String strPath = "D:/java/学习资料";
         List<FancytreeNode> list = documentService.listAllFile(strPath);
         System.out.println(list);
     }

@@ -1,6 +1,6 @@
 package com.itdan.document.utils.common;
 
-import com.itdan.document.utils.result.FancytreeNode;
+import com.itdan.document.domain.FancytreeNode;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.File;
@@ -93,7 +93,8 @@ public class DocumentUtils {
         if(file.isFile()){
             String name = file.getName();
             String path = file.getAbsolutePath();
-            FancytreeNode tree = new FancytreeNode(key++,name,false,path,parentid);
+            String nodeName=name+key;
+            FancytreeNode tree = new FancytreeNode(key++,name,nodeName,path,parentid,1);
             list.add(tree);
             return ;//跳至for循环处
         }
@@ -102,14 +103,15 @@ public class DocumentUtils {
             String name = file.getName();
             String path = file.getAbsolutePath();
             Integer id=key+parentid;
-            FancytreeNode tree = new FancytreeNode(id++,name,true,path,parentid);
+            String nodeName=name+key;
+            FancytreeNode tree = new FancytreeNode(key++,name,nodeName,path,parentid,1);
             list.add(tree);
             String[] str = file.list();
             String parent = file.getParent();
             for (int i = 0;i<str.length;i++){
                 String s = str[i];
                 String newFilePath = path+"\\"+s;//根据当前文件夹，拼接其下文文件形成新的路径
-                getFile(list,key,newFilePath,tree.getKey());
+                getFile(list,key,newFilePath,tree.getId());
             }
         }
     }

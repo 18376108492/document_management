@@ -17,7 +17,7 @@
 </head>
 <body style="overflow-y: auto">
 <div class="am-cf am-padding">
-    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">首页</strong> / <small>本地磁盘</small> <small><button onclick="javascript:loadOnclick()">初始磁盘</button></small></div>
+    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">首页</strong> / <small>本地磁盘</small></div>
 </div>
 
 <ul    class="am-avg-sm-1 am-avg-md-4 am-margin am-padding am-text-center admin-content-list ">
@@ -108,7 +108,6 @@
     </div>
 <!--<![endif]-->
  <script src="../../js/load_main.js" ></script>
-<script src="../../js/ztree_document.js"></script>
 <script src="../../base-component/amazeui/js/amazeui.min.js"></script>
 <script src="../../base-component/layer/layer.js"></script>
   <!--<script src="../js/ztree_document.js"></script>-->
@@ -117,7 +116,6 @@
         alert(window.location.href);
         window.location.href="http://blog.csdn.net/";
     });
-
 
 </script>
 </body>

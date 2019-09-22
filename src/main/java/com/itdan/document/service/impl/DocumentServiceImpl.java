@@ -2,13 +2,13 @@ package com.itdan.document.service.impl;
 
 import com.itdan.document.dao.DiskMapper;
 import com.itdan.document.dao.DocumentFileMapper;
+import com.itdan.document.dao.FancytreeNodeMapper;
 import com.itdan.document.domain.Disk;
 import com.itdan.document.domain.DocumentFile;
-import com.itdan.document.utils.result.FancytreeNode;
+import com.itdan.document.domain.FancytreeNode;
 import com.itdan.document.service.DocumentService;
 import com.itdan.document.utils.common.DocumentUtils;
 import com.itdan.document.utils.common.IDUtils;
-import com.itdan.document.utils.common.JsonUtils;
 import com.itdan.document.utils.jedis.JedisClient;
 import com.itdan.document.utils.result.DocumentReslut;
 import org.apache.commons.lang.StringUtils;
@@ -35,6 +35,9 @@ public class DocumentServiceImpl implements DocumentService {
     private DocumentFileMapper documentFileMapper;
 
     @Autowired
+    private FancytreeNodeMapper fancytreeNodeMapper;
+
+    @Autowired
     private JedisClient jedisClient;
 
     @Value("${DISK_LIST_EXPIRE}")
@@ -45,6 +48,12 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Value("${KEY_PARENT_ID}")
     private Integer KEY_PARENT_ID;//设置根目录父类ID为0
+
+    @Value("${KEY_ZTREE}")
+    private  Integer KEY_ZTREE;//设置磁盘根目录key
+
+    @Value("${KEY_ZTREE}")
+    private Integer PARENT_ID;//设置根目录文件的ID
 
     @Override
     public List<Disk> getDisk() {
@@ -164,13 +173,7 @@ public class DocumentServiceImpl implements DocumentService {
 
         if (diskName!=null) {
             //获取磁盘根目录
-            String rootName = DocumentUtils.getDiskRoot(diskName);
-             if (StringUtils.isNotBlank(rootName)) {
-
-
-
                return null;
-            }
         }
         return new DocumentFile();
     }
@@ -239,6 +242,20 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     /**
+     * 将树形节点存储到数据库中
+     * @param key 节点ID
+     * @param file 节点文件
+     * @param parentId 父类节点ID
+     * @return
+     */
+    public  FancytreeNode  addTreeNode(Integer key,File file,Integer parentId){
+        String nodeName=file.getName()+key;
+        FancytreeNode node = new FancytreeNode(key, file.getName(),nodeName,file.getPath(),parentId,0 );
+        fancytreeNodeMapper.addTreeNode(node);
+        return node;
+    }
+
+    /**
      * 获取所有文件，存入数据库，并组成树形结构
      * @param nodeList 树形节点集合
      * @param key 文件ID
@@ -268,7 +285,7 @@ public class DocumentServiceImpl implements DocumentService {
                 String path = file.getAbsolutePath();//获取路径
                 key=Math.abs((int)IDUtils.genItemId());//设置新ID
                 //添加树形节点
-                FancytreeNode tree = new FancytreeNode(key,fileName,false,path,parentId);
+                FancytreeNode tree=addTreeNode(key,file,parentId);
                 nodeList.add(tree);
                 //调用添加文件的方法
                 DocumentFile document= addDocument(file,key,parentId);
@@ -283,7 +300,7 @@ public class DocumentServiceImpl implements DocumentService {
                 String path = file.getAbsolutePath();
                 key=Math.abs((int)IDUtils.genItemId());//设置新ID
                 //添加树形节点
-                FancytreeNode tree = new FancytreeNode(key,name,true,path,parentId);
+                FancytreeNode tree=addTreeNode(key,file,parentId);
                 nodeList.add(tree);
                 //添加文件
                 DocumentFile document= addDocument(file,key,parentId);
@@ -293,7 +310,7 @@ public class DocumentServiceImpl implements DocumentService {
                 for (int i = 0;i<str.length;i++){
                     String s = str[i];
                     String newFilePath = path+"\\"+s;//根据当前文件夹，拼接其下文文件形成新的路径
-                    getAllFile(nodeList,key,newFilePath,tree.getKey());
+                    getAllFile(nodeList,key,newFilePath,tree.getId());
                 }
            // }
         }

@@ -52,126 +52,126 @@
 			};
 
 			// zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
-			var zNodes = [{
-					id: 1,
-					pId: 0,
-					name: "父节点1",
-					title: "",
-					checked: true,
-					open: true
-				},
-				{
-					id: 11,
-					pId: 1,
-					name: "父节点11",
-					title: "",
-					checked: true
-				},
-				{
-					id: 111,
-					pId: 11,
-					name: "叶子节点111",
-					title: "",
-					checked: true,
-					isHidden: true
-				},
-				{
-					id: 112,
-					pId: 11,
-					name: "叶子节点112",
-					title: ""
-				},
-				{
-					id: 113,
-					pId: 11,
-					name: "叶子节点113",
-					title: ""
-				},
-				{
-					id: 12,
-					pId: 1,
-					name: "父节点12",
-					title: "",
-					isHidden: true
-				},
-				{
-					id: 121,
-					pId: 12,
-					name: "叶子节点121",
-					title: ""
-				},
-				{
-					id: 122,
-					pId: 12,
-					name: "叶子节点122",
-					title: "",
-					isHidden: true
-				},
-				{
-					id: 123,
-					pId: 12,
-					name: "叶子节点123",
-					title: ""
-				},
-				{
-					id: 2,
-					pId: 0,
-					name: "父节点2",
-					title: ""
-				},
-				{
-					id: 21,
-					pId: 2,
-					name: "父节点21",
-					title: "",
-					isHidden: true
-				},
-				{
-					id: 211,
-					pId: 21,
-					name: "叶子节点211",
-					title: ""
-				},
-				{
-					id: 212,
-					pId: 21,
-					name: "叶子节点212",
-					title: ""
-				},
-				{
-					id: 213,
-					pId: 21,
-					name: "叶子节点213",
-					title: ""
-				},
-				{
-					id: 22,
-					pId: 2,
-					name: "父节点22",
-					title: ""
-				},
-				{
-					id: 221,
-					pId: 22,
-					name: "叶子节点221",
-					title: ""
-				},
-				{
-					id: 222,
-					pId: 22,
-					name: "叶子节点222",
-					title: ""
-				},
-				{
-					id: 223,
-					pId: 22,
-					name: "叶子节点223",
-					title: ""
-				}
-			];
+
 
 			//  var zNodes = function(){
-			//	var result = [];
+			//	var result =	// var zNodes = [{
+            // 			// 		id: 1,
+            // 			// 		pId: 0,
+            // 			// 		name: "父节点1",
+            // 			// 		title: "",
+            // 			// 		checked: true,
+            // 			// 		open: true
+            // 			// 	},
+            // 			// 	{
+            // 			// 		id: 11,
+            // 			// 		pId: 1,
+            // 			// 		name: "父节点11",
+            // 			// 		title: "",
+            // 			// 		checked: true
+            // 			// 	},
+            // 			// 	{
+            // 			// 		id: 111,
+            // 			// 		pId: 11,
+            // 			// 		name: "叶子节点111",
+            // 			// 		title: "",
+            // 			// 		checked: true,
+            // 			// 		isHidden: true
+            // 			// 	},
+            // 			// 	{
+            // 			// 		id: 112,
+            // 			// 		pId: 11,
+            // 			// 		name: "叶子节点112",
+            // 			// 		title: ""
+            // 			// 	},
+            // 			// 	{
+            // 			// 		id: 113,
+            // 			// 		pId: 11,
+            // 			// 		name: "叶子节点113",
+            // 			// 		title: ""
+            // 			// 	},
+            // 			// 	{
+            // 			// 		id: 12,
+            // 			// 		pId: 1,
+            // 			// 		name: "父节点12",
+            // 			// 		title: "",
+            // 			// 		isHidden: true
+            // 			// 	},
+            // 			// 	{
+            // 			// 		id: 121,
+            // 			// 		pId: 12,
+            // 			// 		name: "叶子节点121",
+            // 			// 		title: ""
+            // 			// 	},
+            // 			// 	{
+            // 			// 		id: 122,
+            // 			// 		pId: 12,
+            // 			// 		name: "叶子节点122",
+            // 			// 		title: "",
+            // 			// 		isHidden: true
+            // 			// 	},
+            // 			// 	{
+            // 			// 		id: 123,
+            // 			// 		pId: 12,
+            // 			// 		name: "叶子节点123",
+            // 			// 		title: ""
+            // 			// 	},
+            // 			// 	{
+            // 			// 		id: 2,
+            // 			// 		pId: 0,
+            // 			// 		name: "父节点2",
+            // 			// 		title: ""
+            // 			// 	},
+            // 			// 	{
+            // 			// 		id: 21,
+            // 			// 		pId: 2,
+            // 			// 		name: "父节点21",
+            // 			// 		title: "",
+            // 			// 		isHidden: true
+            // 			// 	},
+            // 			// 	{
+            // 			// 		id: 211,
+            // 			// 		pId: 21,
+            // 			// 		name: "叶子节点211",
+            // 			// 		title: ""
+            // 			// 	},
+            // 			// 	{
+            // 			// 		id: 212,
+            // 			// 		pId: 21,
+            // 			// 		name: "叶子节点212",
+            // 			// 		title: ""
+            // 			// 	},
+            // 			// 	{
+            // 			// 		id: 213,
+            // 			// 		pId: 21,
+            // 			// 		name: "叶子节点213",
+            // 			// 		title: ""
+            // 			// 	},
+            // 			// 	{
+            // 			// 		id: 22,
+            // 			// 		pId: 2,
+            // 			// 		name: "父节点22",
+            // 			// 		title: ""
+            // 			// 	},
+            // 			// 	{
+            // 			// 		id: 221,
+            // 			// 		pId: 22,
+            // 			// 		name: "叶子节点221",
+            // 			// 		title: ""
+            // 			// 	},
+            // 			// 	{
+            // 			// 		id: 222,
+            // 			// 		pId: 22,
+            // 			// 		name: "叶子节点222",
+            // 			// 		title: ""
+            // 			// 	},
+            // 			// 	{
+            // 			// 		id: 223,
+            // 			// 		pId: 22,
+            // 			// 		name: "叶子节点223",
+            // 			// 		title: ""
+            // 			// 	}
+            // 			// ]; [];
 			//	$.ajax({
 			//		url : url, // 请求的URL
 			//		dataType : 'json',
@@ -183,40 +183,40 @@
 			//	});
 			//	return result;
 			//};
+            var  zNodes;
 
-			//获取部门tree数据
-			//  function loadTree() {
-			//      $.ajax({
-			//          type: 'POST',
-			//          contentType: '',
-			//          url: "",
-			//          data: {},
-			//          timeout: 1000, //超时时间设置，单位毫秒
-			//          dataType: 'json',
-			//          success: function (res) {
-			//              zNodes = []; //初始化ztree
-			//              for (var i = 0; i < res.length; i++) {
-			//                  var data = res[i]
-			//                  zNodes.push({
-			//                      'id': data.id,
-			//                      'pId': data.pId,
-			//                      'name': data.name,
-			//                      'open': false
-			//                  });
-			//              }
-			//              zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes); //初始化ztree
-			//          }
-			//      })
-			//
-			//  }
-			//
-			//  $(document).ready(function () {
-			//      loadTree();
-			//  });
-			// 
+			//获取tree数据
+				function loadTree() {
+			     $.ajax({
+			         type: 'GET',
+			         contentType: '',
+			         url: "/disk/init_disk",
+			         data: {},
+			         timeout: 6000, //超时时间设置，单位毫秒
+			         dataType: 'json',
+			         success: function (data) {
+			            zNodes = data; //初始化ztree
+						 return zNodes();
+			             // for (var i = 0; i < res.length; i++) {
+			             //     var data = res[i]
+			             //     zNodes.push({
+			             //         'id': data.treeId,
+			             //         'pId': data.parentId,
+			             //         'name': data.title,
+			             //         'open': false
+			             //     });
+			             // }
+			         }
+			     })
+
+			 }
+
+
+
 
 			//初始化
 			$(document).ready(function() {
+                loadTree();
 				zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes); //初始化菜单树形结构
 				$("#hideNodesBtn").bind("click", {
 					type: "rename"

@@ -3,10 +3,8 @@ package com.itdan.document.service;
 import com.itdan.document.domain.Disk;
 import com.itdan.document.domain.DocumentFile;
 import com.itdan.document.utils.result.DocumentReslut;
-import com.itdan.document.utils.result.FancytreeNode;
+import com.itdan.document.domain.FancytreeNode;
 
-import javax.print.Doc;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 
