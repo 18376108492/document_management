@@ -15,37 +15,43 @@
   <insert id="addTreeNode" parameterType="com.itdan.document.domain.FancytreeNode">
    INSERT  into  tree_node
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="treeId != null" >
-        tree_id,
+      <if test="id != null" >
+        id,
       </if>
       <if test="title != null" >
         title,
       </if>
-      <if test="folder != null" >
-        folder,
+      <if test="name != null" >
+        name,
       </if>
       <if test="path != null" >
         path,
       </if>
-      <if test="parentId != null" >
-        parentId
+      <if test="pId != null" >
+        pId,
+      </if>
+      <if test="isHidden != null" >
+        isHidden
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="treeId != null" >
-        #{treeId,jdbcType=INTEGER},
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
       </if>
       <if test="title != null" >
         #{title,jdbcType=VARCHAR},
       </if>
-      <if test="folder != null" >
-        #{folder,jdbcType=INTEGER},
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
       </if>
       <if test="path != null" >
         #{path,jdbcType=VARCHAR},
       </if>
-      <if test="parentId != null" >
-        #{parentId,jdbcType=INTEGER},
+      <if test="pId != null" >
+        #{pId,jdbcType=INTEGER},
+      </if>
+      <if test="isHidden != null" >
+        #{isHidden,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
