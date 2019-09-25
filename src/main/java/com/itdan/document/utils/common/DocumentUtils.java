@@ -48,7 +48,8 @@ public class DocumentUtils {
         System.out.println("char_name:"+Arrays.toString(name));
         for (int i = 0; i <name.length-1 ; i++) {
             System.out.println("name[i]"+name[i]);
-            if('C'==name[i]){
+            if(Character.isLowerCase( name[i]) || Character.isUpperCase( name[i])){
+                //判断字符是否为字母，仅对win系统下的磁盘适用，在Linux下还要修改算法
                 newName+=name[i];
                 System.out.println("name:"+name[i]);
                 for(int j=1;j<name.length-i;j++){

@@ -181,6 +181,8 @@ public class DocumentServiceImpl implements DocumentService {
 
     public List<FancytreeNode> listAllFile(String rootName) throws FileNotFoundException {
        if(StringUtils.isNotBlank(rootName)) {
+           //只使用于遍历根目录
+           //String  newName=DocumentUtils.getDiskRoot(rootName);
            //树形节点集合
            List<FancytreeNode> nodeList = new ArrayList<>();
            //设置根目录节点ID
@@ -266,6 +268,7 @@ public class DocumentServiceImpl implements DocumentService {
                            Integer key,
                            String fileNam,
                            Integer parentId)throws FileNotFoundException{
+
         File file=new File(fileNam);
         //使用树形节点集合来存储对象
         //判断文件是否存在

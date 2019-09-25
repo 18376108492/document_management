@@ -172,40 +172,42 @@
             // 			// 		title: ""
             // 			// 	}
             // 			// ]; [];
-			//	$.ajax({
-			//		url : url, // 请求的URL
-			//		dataType : 'json',
-			//		async: false,
-			//		type : "get",
-			//		success : function(data) {
-			//			result = data.result.rows;
-			//		}
-			//	});
-			//	return result;
-			//};
-            var  zNodes;
+
+            function getQueryString(name) {
+                var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) {
+                    return decodeURI(r[2]);
+                }
+                return null;
+            }
+            // 这样调用：
+            var diskName = getQueryString("diskName");
+            alert("diskName:"+diskName)
+
+            var  zNodes=[];
 
 			//获取tree数据
 				function loadTree() {
 			     $.ajax({
 			         type: 'GET',
 			         contentType: '',
-			         url: "/disk/init_disk",
-			         data: {},
+			         url: "/disk/init_disk?diskName="+diskName,
 			         timeout: 6000, //超时时间设置，单位毫秒
 			         dataType: 'json',
 			         success: function (data) {
-			            zNodes = data; //初始化ztree
-						 return zNodes();
-			             // for (var i = 0; i < res.length; i++) {
-			             //     var data = res[i]
-			             //     zNodes.push({
-			             //         'id': data.treeId,
-			             //         'pId': data.parentId,
-			             //         'name': data.title,
-			             //         'open': false
-			             //     });
-			             // }
+			            var res = data; //初始化ztree
+						 alert("treeJson:"+res);
+			              for (var i = 0; i < res.length; i++) {
+			                  var data = res[i]
+			                  zNodes.push({
+			                     'id': data.id,
+			                      'pId': data.pId,
+			                      'name': data.title,
+			                      'open': false
+			                  });
+			              }
+			              return zNodes;
 			         }
 			     })
 
@@ -216,8 +218,9 @@
 
 			//初始化
 			$(document).ready(function() {
-                loadTree();
-				zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes); //初始化菜单树形结构
+                zNodes= loadTree();
+                alert("zNodes:"+zNodes)
+                zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes); //初始化菜单树形结构
 				$("#hideNodesBtn").bind("click", {
 					type: "rename"
 				}, hideNodes);
