@@ -90,7 +90,7 @@ public class DiskController {
         //获取要查询的磁盘名
        // String diskName=new String(request.getParameter("diskName").getBytes("iso-8859-1"),"UTF-8");
        // String diskName="D:/java/学习资料";//由于遍历磁盘根路径太久，所以将磁盘路径写死，以便迭代数据
-        String diskName="D:/ge/css";//由于遍历磁盘根路径太久，所以将磁盘路径写死，以便迭代数据
+        String diskName="D:/ge";//由于遍历磁盘根路径太久，所以将磁盘路径写死，以便迭代数据
 
          System.out.println("diskName02:"+diskName);
        String diskName03= CookieUtils.getCookieValue(request,INIT_DISK_TOKEN);
