@@ -29,6 +29,8 @@ public class DocumentFile implements Serializable {
 
     private Date changeDate;//文件修改日期
 
+    private String diskName;//该文件属于某磁盘的名
+
     public Integer getId() {
         return id;
     }
@@ -109,6 +111,14 @@ public class DocumentFile implements Serializable {
         this.changeDate = changeDate;
     }
 
+    public String getDiskName() {
+        return diskName;
+    }
+
+    public void setDiskName(String diskName) {
+        this.diskName = diskName;
+    }
+
     @Override
     public String toString() {
         return "DocumentFile{" +
@@ -116,12 +126,13 @@ public class DocumentFile implements Serializable {
                 ", parentPoint=" + parentPoint +
                 ", isParent=" + isParent +
                 ", document='" + document + '\'' +
-                ", fileSize=" + fileSize +
+                ", fileSize='" + fileSize + '\'' +
                 ", fileAddr='" + fileAddr + '\'' +
                 ", fileName='" + fileName + '\'' +
                 ", fileDate=" + fileDate +
                 ", backups=" + backups +
                 ", changeDate=" + changeDate +
+                ", diskName='" + diskName + '\'' +
                 '}';
     }
 }

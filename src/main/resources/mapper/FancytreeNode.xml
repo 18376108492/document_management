@@ -55,4 +55,14 @@
       </if>
     </trim>
   </insert>
+
+  <!--根据磁盘路径，从数据库中获取该磁盘所有相关文件（树形节点)-->
+  <select id="getAllFile" parameterType="String" resultMap="BaseResultMap">
+    select * from tree_node
+    where
+    <if test="diskName != null" >
+      disk_name=#{diskName}
+    </if>
+  </select>
+
 </mapper>

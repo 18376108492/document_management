@@ -195,10 +195,11 @@
                     type: 'GET',
                     contentType: '',
                     url: "/disk/init_disk?diskName="+diskName,
-                    timeout: 6000, //超时时间设置，单位毫秒
+                    //timeout: 6000, //超时时间设置，单位毫秒
                     dataType: 'json',
                     success: function (data) {
                         var zNodes = data; //初始化ztree
+
                         alert("zNodes:"+zNodes)
                         zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes); //初始化菜单树形结构
                     }

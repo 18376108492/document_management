@@ -68,21 +68,18 @@ public class DiskController {
                                     HttpServletResponse response) throws  Exception{
         //获取需要文件信息的磁盘名，将其先存储到cookie中
         String diskName=new String(request.getParameter("diskName").getBytes("iso-8859-1"),"UTF-8");
-        System.out.println("diskName01:"+diskName);
         request.setAttribute("diskName",diskName);
-        try {
-            if(StringUtils.isNotBlank(CookieUtils.getCookieValue(request,INIT_DISK_TOKEN))){
-                CookieUtils.deleteCookie(request,response,INIT_DISK_TOKEN);
-                CookieUtils.setCookie(request,response,INIT_DISK_TOKEN,JsonUtils.objectToJson(diskName));
-            }
-            CookieUtils.setCookie(request,response,INIT_DISK_TOKEN,JsonUtils.objectToJson(diskName));
-        }catch (Exception e){
-            e.printStackTrace();
-        }
         return "document";
     }
 
 
+    /**
+     * 根据传入的路径，获取该路径下的所有文件
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/disk/init_disk", method = RequestMethod.GET)
     @ResponseBody
     public String initDisk(HttpServletRequest request,
@@ -90,14 +87,11 @@ public class DiskController {
         //获取要查询的磁盘名
        // String diskName=new String(request.getParameter("diskName").getBytes("iso-8859-1"),"UTF-8");
        // String diskName="D:/java/学习资料";//由于遍历磁盘根路径太久，所以将磁盘路径写死，以便迭代数据
-        String diskName="D:/ge";//由于遍历磁盘根路径太久，所以将磁盘路径写死，以便迭代数据
-
-         System.out.println("diskName02:"+diskName);
-       String diskName03= CookieUtils.getCookieValue(request,INIT_DISK_TOKEN);
-       System.out.println("diskName03:"+diskName03);
+        String diskName="D:/ge";//由于遍历磁盘根路径太久，所以将磁盘路径写死，以便迭代数据测试
        if (StringUtils.isNotBlank(diskName)){
-           List<FancytreeNode> nodeList = documentService.listAllFile(diskName);
-           return JsonUtils.objectToJson(nodeList);
+           //去数据库中获取已经存储在数据库中数据
+           List<FancytreeNode> list= documentService.getAllFile(diskName);
+           return JsonUtils.objectToJson(list);
        }
        return JsonUtils.objectToJson("");
     }

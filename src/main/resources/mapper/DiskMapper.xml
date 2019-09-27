@@ -7,6 +7,7 @@
     <result column="disk_type" jdbcType="VARCHAR" property="diskType" />
     <result column="free_space" jdbcType="VARCHAR" property="freeSpace" />
     <result column="total_space" jdbcType="VARCHAR" property="totalSpace" />
+    <result column="disk_name" jdbcType="VARCHAR" property="diskName" />
   </resultMap>
 
 
@@ -41,7 +42,10 @@
         free_space,
       </if>
       <if test="totalSpace != null" >
-      total_space
+      total_space,
+      </if>
+      <if test="diskName != null" >
+        disk_name
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -59,6 +63,9 @@
       </if>
       <if test="totalSpace != null" >
         #{totalSpace,jdbcType=VARCHAR},
+      </if>
+      <if test="diskName != null" >
+        #{diskName,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
