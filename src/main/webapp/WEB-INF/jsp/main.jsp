@@ -21,7 +21,7 @@
 </div>
 
 <ul    class="am-avg-sm-1 am-avg-md-4 am-margin am-padding am-text-center admin-content-list ">
-    <p id="load-disk"></p>>
+    <p id="load-disk"></p>
 </ul>
 
 

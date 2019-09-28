@@ -1,6 +1,7 @@
 package com.itdan.document.dao;
 
 import com.itdan.document.domain.FancytreeNode;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -20,5 +21,5 @@ public interface FancytreeNodeMapper {
      * @param diskName 磁盘名
      * @return
      */
-    List<FancytreeNode> getAllFile(String diskName);
+    List<FancytreeNode> getAllFile(@Param(value = "diskName") String diskName);
 }

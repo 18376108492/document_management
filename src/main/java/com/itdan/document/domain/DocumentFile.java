@@ -29,7 +29,7 @@ public class DocumentFile implements Serializable {
 
     private Date changeDate;//文件修改日期
 
-    private String diskName;//该文件属于某磁盘的名
+    private  String diskName;
 
     public Integer getId() {
         return id;
@@ -132,7 +132,6 @@ public class DocumentFile implements Serializable {
                 ", fileDate=" + fileDate +
                 ", backups=" + backups +
                 ", changeDate=" + changeDate +
-                ", diskName='" + diskName + '\'' +
                 '}';
     }
 }

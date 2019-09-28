@@ -12,6 +12,7 @@
     <result column="file_date" property="fileDate" jdbcType="TIMESTAMP" />
     <result column="backups" property="backups" jdbcType="INTEGER" />
     <result column="change_date" property="changeDate" jdbcType="TIMESTAMP" />
+    <result column="diskName" property="diskName" jdbcType="VARCHAR" />
   </resultMap>
 
 
@@ -49,6 +50,9 @@
       <if test="changeDate != null" >
         change_date,
       </if>
+      <if test="diskName != null" >
+        diskName
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -80,6 +84,9 @@
       </if>
       <if test="changeDate != null" >
         #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="diskName != null" >
+        #{diskName,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>

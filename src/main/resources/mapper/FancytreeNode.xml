@@ -2,11 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.itdan.document.dao.FancytreeNodeMapper">
   <resultMap id="BaseResultMap" type="com.itdan.document.domain.FancytreeNode">
-    <id column="tree_id" jdbcType="INTEGER" property="treeId" />
+    <id column="id" jdbcType="INTEGER" property="treeId" />
     <result column="title" jdbcType="VARCHAR" property="title" />
-    <result column="folder" jdbcType="INTEGER" property="folder" />
+    <result column="isHidden" jdbcType="INTEGER" property="title" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="path" jdbcType="VARCHAR" property="path" />
-    <result column="parentId" jdbcType="INTEGER" property="parentId" />
+    <result column="pId" jdbcType="INTEGER" property="pId" />
+    <result column="disk_name" jdbcType="VARCHAR" property="diskName" />
   </resultMap>
 
 
@@ -31,7 +33,10 @@
         pId,
       </if>
       <if test="isHidden != null" >
-        isHidden
+        isHidden,
+      </if>
+      <if test="diskName != null" >
+        disk_name
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -53,11 +58,14 @@
       <if test="isHidden != null" >
         #{isHidden,jdbcType=INTEGER},
       </if>
+      <if test="diskName != null" >
+        #{diskName,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
 
   <!--根据磁盘路径，从数据库中获取该磁盘所有相关文件（树形节点)-->
-  <select id="getAllFile" parameterType="String" resultMap="BaseResultMap">
+  <select id="getAllFile" parameterType="java.lang.String"  resultMap="BaseResultMap">
     select * from tree_node
     where
     <if test="diskName != null" >

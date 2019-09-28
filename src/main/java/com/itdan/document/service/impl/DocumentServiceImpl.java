@@ -91,8 +91,9 @@ public class DocumentServiceImpl implements DocumentService {
         try {
             //从redis中获取数据
             String json = jedisClient.get("DISK_LIST");
-            List<Disk> diskList = JsonUtils.jsonToList(json, Disk.class);
+
             if (StringUtils.isNotBlank(json)) {
+                List<Disk> diskList = JsonUtils.jsonToList(json, Disk.class);
                 return diskList;
             }
         } catch (Exception e) {
@@ -101,6 +102,10 @@ public class DocumentServiceImpl implements DocumentService {
 
         //从数据中查询磁盘缓存数据
         List<Disk> diskList = diskMapper.getDiskList();
+
+        if(diskList==null||diskList.size()<=0){
+            diskList=getDisk();
+        }
 
         //将从数据中查询的磁盘信息存储到redis中
         //查询数据库,把结果添加到redis缓存中
@@ -226,9 +231,11 @@ public class DocumentServiceImpl implements DocumentService {
      * @param parentId 文件父类ID
      * @return
      */
-    public DocumentFile addDocument(File f, Integer key, Integer parentId) {
+    public DocumentFile addDocument(File f, Integer key, Integer parentId,String rootName) {
         //存储根目录
         DocumentFile documentFile = new DocumentFile();
+
+        documentFile.setDiskName(rootName);
         //设置文件ID
         documentFile.setId(key);
         //设置文件父类ID
@@ -260,9 +267,10 @@ public class DocumentServiceImpl implements DocumentService {
      * @param parentId 父类节点ID
      * @return
      */
-    public FancytreeNode addTreeNode(Integer key, File file, Integer parentId) {
+    public FancytreeNode addTreeNode(Integer key, File file, Integer parentId,String rootName) {
         String nodeName = file.getName();
         FancytreeNode node = new FancytreeNode(key, file.getName(), nodeName, file.getPath(), parentId, 0);
+        node.setDiskName(rootName);//便于表示为某盘下的节点
         fancytreeNodeMapper.addTreeNode(node);
         return node;
     }
@@ -272,15 +280,15 @@ public class DocumentServiceImpl implements DocumentService {
      *
      * @param nodeList 树形节点集合
      * @param key      文件ID
-     * @param fileNam  文件路径
+     * @param rootName  文件路径
      * @param parentId 父类节点ID
      */
     public void getAllFile(List<FancytreeNode> nodeList,
                            Integer key,
-                           String fileNam,
+                           String rootName,
                            Integer parentId) throws FileNotFoundException {
 
-        File file = new File(fileNam);
+        File file = new File(rootName);
         //使用树形节点集合来存储对象
         //判断文件是否存在
         if (!file.exists()) {
@@ -299,10 +307,10 @@ public class DocumentServiceImpl implements DocumentService {
             String path = file.getAbsolutePath();//获取路径
             key = Math.abs((int) IDUtils.genItemId());//设置新ID
             //添加树形节点
-            FancytreeNode tree = addTreeNode(key, file, parentId);
+            FancytreeNode tree = addTreeNode(key, file, parentId,rootName);
             nodeList.add(tree);
             //调用添加文件的方法
-            DocumentFile document = addDocument(file, key, parentId);
+            DocumentFile document = addDocument(file, key, parentId,rootName);
             documentFileMapper.addDocumentFile(document);
             //返回
             return;
@@ -314,10 +322,10 @@ public class DocumentServiceImpl implements DocumentService {
             String path = file.getAbsolutePath();
             key = Math.abs((int) IDUtils.genItemId());//设置新ID
             //添加树形节点
-            FancytreeNode tree = addTreeNode(key, file, parentId);
+            FancytreeNode tree = addTreeNode(key, file, parentId,rootName);
             nodeList.add(tree);
             //添加文件
-            DocumentFile document = addDocument(file, key, parentId);
+            DocumentFile document = addDocument(file, key, parentId,rootName);
             documentFileMapper.addDocumentFile(document);
             String[] str = file.list();
             String parent = file.getParent();
@@ -340,7 +348,8 @@ public class DocumentServiceImpl implements DocumentService {
             try {
                 //先获取redis中缓存,存储到redis时磁盘名要与数据后缀名对上，表示某盘的数据
                 String json= jedisClient.get(ZTREE_NODE+":"+diskName);
-                if(StringUtils.isNotBlank(json)){
+                nodeList=JsonUtils.jsonToList(json,FancytreeNode.class);
+                if(nodeList!=null && nodeList.size()>0){
                     nodeList=JsonUtils.jsonToList(json,FancytreeNode.class);
                     return nodeList;
                 }

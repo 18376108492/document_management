@@ -15,6 +15,7 @@ public class FancytreeNode implements Serializable {
     private String path;//全路径
     private Integer pId;//父类ID
     private Integer isHidden;//是否隐藏节点
+    private String diskName;//该文件属于某磁盘的名
 
     public FancytreeNode(){};
 
@@ -71,7 +72,16 @@ public class FancytreeNode implements Serializable {
         return isHidden;
     }
 
+
     public void setIsHidden(Integer isHidden) {
         this.isHidden = isHidden;
+    }
+
+    public String getDiskName() {
+        return diskName;
+    }
+
+    public void setDiskName(String diskName) {
+        this.diskName = diskName;
     }
 }
