@@ -99,4 +99,54 @@
     parent_point=#{parentId}
     </if>
   </select>
+
+  <!--根据ID获取相应文档信息-->
+  <select id="getFileById" parameterType="Integer" resultMap="BaseResultMap">
+    select * from document_file
+    where
+    <if test="id != null" >
+      id=#{id}
+    </if>
+  </select>
+
+  <update id="updataFile" parameterType="com.itdan.document.domain.DocumentFile">
+    update document_file
+    <set >
+      <if test="id != null" >
+        id= #{id,jdbcType=INTEGER},
+      </if>
+      <if test="parentPoint != null" >
+        parent_point= #{parentPoint,jdbcType=INTEGER},
+      </if>
+      <if test="isParent != null" >
+        is_parent= #{isParent,jdbcType=INTEGER},
+      </if>
+      <if test="document != null" >
+        document=#{document,jdbcType=VARCHAR},
+      </if>
+      <if test="fileSize != null" >
+        file_size=#{fileSize,jdbcType=VARCHAR},
+      </if>
+      <if test="fileAddr != null" >
+        file_addr=#{fileAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        file_name=#{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileDate != null" >
+        file_date=#{fileDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="backups != null" >
+        backups=#{backups,jdbcType=INTEGER},
+      </if>
+      <if test="changeDate != null" >
+        change_date=#{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="diskName != null" >
+        diskName=#{diskName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
 </mapper>

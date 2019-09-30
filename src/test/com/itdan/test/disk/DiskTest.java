@@ -326,8 +326,7 @@ public class DiskTest extends BaseTest {
     @Test
     public void testDiskDemo12() throws Exception{
         String diskName="D:/ge";
-       List<FancytreeNode> nodeList= documentService.getAllFile(diskName);
-        System.out.println(nodeList.toString());
+       //String json= documentService.getAllFile(diskName);
     }
 
 }

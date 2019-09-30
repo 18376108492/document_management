@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.itdan.document.dao.FancytreeNodeMapper">
   <resultMap id="BaseResultMap" type="com.itdan.document.domain.FancytreeNode">
-    <id column="id" jdbcType="INTEGER" property="treeId" />
+    <id column="id" jdbcType="INTEGER" property="id" />
     <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="isHidden" jdbcType="INTEGER" property="title" />
     <result column="name" jdbcType="VARCHAR" property="name" />

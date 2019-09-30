@@ -31,6 +31,23 @@ public class DocumentFile implements Serializable {
 
     private  String diskName;
 
+    public DocumentFile() {
+    }
+
+    public DocumentFile(Integer id, Integer parentPoint, Integer isParent, String document, String fileSize, String fileAddr, String fileName, Date fileDate, Integer backups, Date changeDate, String diskName) {
+        this.id = id;
+        this.parentPoint = parentPoint;
+        this.isParent = isParent;
+        this.document = document;
+        this.fileSize = fileSize;
+        this.fileAddr = fileAddr;
+        this.fileName = fileName;
+        this.fileDate = fileDate;
+        this.backups = backups;
+        this.changeDate = changeDate;
+        this.diskName = diskName;
+    }
+
     public Integer getId() {
         return id;
     }

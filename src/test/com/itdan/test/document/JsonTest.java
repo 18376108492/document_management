@@ -1,4 +1,4 @@
-package com.itdan.test.disk;
+package com.itdan.test.document;
 
 import com.itdan.document.domain.Disk;
 import com.itdan.document.service.DocumentService;

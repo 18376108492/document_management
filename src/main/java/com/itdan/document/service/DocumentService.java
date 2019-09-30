@@ -88,5 +88,13 @@ public interface DocumentService  {
      * @param diskName 磁盘名
      * @return
      */
-    List<FancytreeNode> getAllFile(String diskName);
+    List getAllFile(String diskName);
+
+    /**
+     *
+     * @param pId
+     * @param name
+     * @return
+     */
+    DocumentReslut  addNode(String pId,String name);
 }

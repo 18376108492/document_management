@@ -1,6 +1,8 @@
 package com.itdan.document.utils.jedis;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import redis.clients.jedis.Jedis;
@@ -75,6 +77,12 @@ public class JedisClientPool implements JedisClient {
 		return result;
 	}
 
+    public  Set  smembers(String key){
+		Jedis jedis= jedisPool.getResource();
+	   Set result= jedis.smembers(key);
+		return result;
+	}
+
 	@Override
 	public String hget(String key, String field) {
 		Jedis jedis = jedisPool.getResource();
@@ -90,6 +98,7 @@ public class JedisClientPool implements JedisClient {
 		jedis.close();
 		return result;
 	}
+
 
 	@Override
 	public Boolean hexists(String key, String field) {
@@ -113,6 +122,12 @@ public class JedisClientPool implements JedisClient {
 		Long result = jedis.del(key);
 		jedis.close();
 		return result;
+	}
+
+	public 	Map<String,String> hgetAll(String key){
+		Jedis jedis = jedisPool.getResource();
+	  	Map<String,String> result =jedis.hgetAll(key);
+		return  result;
 	}
 
 }

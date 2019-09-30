@@ -33,5 +33,16 @@ public interface DocumentFileMapper {
      */
     List<DocumentFile> getListByParentId(@Param(value = "parentId") Integer parentId);
 
+    /**
+     * 根据ID获取相应文档信息
+     * @param id
+     * @return
+     */
+    DocumentFile getFileById(@Param(value ="id")Integer id);
 
+    /**
+     * 更新文件对象
+     * @param documentFile
+     */
+    void updataFile(DocumentFile documentFile);
 }

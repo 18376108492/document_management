@@ -10,6 +10,8 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 文档工具类
@@ -31,6 +33,65 @@ public class DocumentUtils {
         return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
     }
 
+
+    /**
+     * 改变从redis中获取出的文档数据
+     * @param json
+     * @return
+     */
+    public static String chageValueType(String json){
+        StringBuilder sb=new StringBuilder(json);
+        String str02=sb.reverse().toString();
+        //截取字符串
+        int index = DocumentUtils.getCharacterPosition(str02, "]", 3);
+        //System.out.println("str02:"+str02);
+        String str03= str02.substring(index);
+       // System.out.println(str03);
+        sb=new StringBuilder(str03);
+        sb.deleteCharAt(str03.length()-1);
+        String str04= sb.reverse().toString();
+       return str04;
+    }
+
+    /**
+     * 获取某个符号出现在字符串中的指定次数的下标位置
+     * @param string
+     * @param tagerString
+     * @param index
+     * @return
+     */
+    public static int getCharacterPosition(String string,String tagerString,int index){
+        //这里是获取"/"符号的位置
+        Matcher slashMatcher = Pattern.compile(tagerString).matcher(string);
+        int mIdx = 0;
+        while(slashMatcher.find()) {
+            mIdx++;
+            //当"/"符号第三次出现的位置
+            if(mIdx == index){
+                break;
+            }
+        }
+        return slashMatcher.start();
+    }
+
+    /**
+     * json的替换
+     * @param json
+     * @return
+     */
+    public static String replaceJson(String json){
+        //将json字符串中的\全替换成空格，将前后数据的["删掉
+        json.replace('\'',' ');
+        StringBuilder stringBuilder=new StringBuilder(json);
+        json.trim();
+        stringBuilder.deleteCharAt(0);
+        stringBuilder.deleteCharAt(stringBuilder.length()-1);
+        stringBuilder.deleteCharAt(stringBuilder.length()-2);
+        //stringBuilder.delete(0,1);
+        //stringBuilder.delete(stringBuilder.length()-2,stringBuilder.length()-1);
+        json=stringBuilder.toString();
+        return json;
+    }
 
     /**
      * 从磁盘数据库中查询出磁盘信息，并且拼接为，文件对象可以调用的根目录

@@ -90,8 +90,7 @@ public class DiskController {
         String diskName="D:/ge";//由于遍历磁盘根路径太久，所以将磁盘路径写死，以便迭代数据测试
        if (StringUtils.isNotBlank(diskName)){
            //去数据库中获取已经存储在数据库中数据
-           List<FancytreeNode> list= documentService.getAllFile(diskName);
-           return JsonUtils.objectToJson(list);
+           return JsonUtils.objectToJson(documentService.getAllFile(diskName));
        }
        return JsonUtils.objectToJson("");
     }

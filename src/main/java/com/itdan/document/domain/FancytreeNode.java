@@ -28,6 +28,19 @@ public class FancytreeNode implements Serializable {
         this.isHidden = isHidden;
     }
 
+    @Override
+    public String toString() {
+        return "FancytreeNode{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", name='" + name + '\'' +
+                ", path='" + path + '\'' +
+                ", pId=" + pId +
+                ", isHidden=" + isHidden +
+                ", diskName='" + diskName + '\'' +
+                '}';
+    }
+
     public Integer getId() {
         return id;
     }

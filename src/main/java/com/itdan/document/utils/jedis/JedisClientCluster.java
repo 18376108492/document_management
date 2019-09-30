@@ -1,6 +1,8 @@
 package com.itdan.document.utils.jedis;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import redis.clients.jedis.JedisCluster;
 
@@ -53,6 +55,11 @@ public class JedisClientCluster implements JedisClient {
 	}
 
 	@Override
+	public Set smembers(String key) {
+		return jedisCluster.smembers(key);
+	}
+
+	@Override
 	public String hget(String key, String field) {
 		return jedisCluster.hget(key, field);
 	}
@@ -76,5 +83,8 @@ public class JedisClientCluster implements JedisClient {
 	public Long del(String key) {
 		return jedisCluster.del(key);
 	}
+
+	@Override
+	public Map<String,String> hgetAll(String key){return  jedisCluster.hgetAll(key);}
 
 }
