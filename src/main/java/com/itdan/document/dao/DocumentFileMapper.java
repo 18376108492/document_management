@@ -45,4 +45,17 @@ public interface DocumentFileMapper {
      * @param documentFile
      */
     void updataFile(DocumentFile documentFile);
+
+    /**
+     * 根据parent_point获取该节点下所有子节点总数
+     * @param parent_point
+     * @return
+     */
+    Long countNode(@Param(value ="parent_point")Integer parent_point);
+
+    /**
+     * 根据ID删除相应的文档信息
+     * @param id
+     */
+    void removeFile(@Param(value ="id")Integer id);
 }

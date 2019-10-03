@@ -1,5 +1,6 @@
 package com.itdan.document.service;
 
+import com.itdan.document.domain.Date;
 import com.itdan.document.domain.Disk;
 import com.itdan.document.domain.DocumentFile;
 import com.itdan.document.utils.result.DocumentReslut;
@@ -91,10 +92,24 @@ public interface DocumentService  {
     List getAllFile(String diskName);
 
     /**
-     *
+     * 新增节点
      * @param pId
      * @param name
      * @return
      */
     DocumentReslut  addNode(String pId,String name);
+
+    /**
+     * 更新节点信息
+     * @param date
+     * @return
+     */
+    DocumentReslut updateTreeNodeName(Date date);
+
+    /**
+     * 删除节点
+     * @param date
+     * @return
+     */
+    DocumentReslut removeZtreeNode(Date date);
 }

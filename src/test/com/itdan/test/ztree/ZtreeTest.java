@@ -1,6 +1,7 @@
 package com.itdan.test.ztree;
 
 
+import com.itdan.document.dao.DocumentFileMapper;
 import com.itdan.document.dao.FancytreeNodeMapper;
 import com.itdan.document.domain.FancytreeNode;
 import com.itdan.document.service.DocumentService;
@@ -23,6 +24,9 @@ public class ZtreeTest extends BaseTest {
 
     @Autowired
     private FancytreeNodeMapper fancytreeNodeMapper;
+
+    @Autowired
+    private DocumentFileMapper documentFileMapper;
 
     @Autowired
     private JedisClient jedisClient;
@@ -143,7 +147,17 @@ public class ZtreeTest extends BaseTest {
         //添加节点测试
         String pid="596525363";
         String name="新节点";
-       DocumentReslut documentReslut= documentService.addNode(pid,name);
+        DocumentReslut documentReslut= documentService.addNode(pid,name);
         System.out.println(documentReslut.getMsg());
     }
+
+    @Test
+    public void testDemo08() throws Exception{
+     //测试某节点的子节点总数
+        Integer pid=596525363;
+        Long num= documentFileMapper.countNode(pid);
+        System.out.println("num:"+num);
+        System.out.println(num>0);
+    }
+
 }

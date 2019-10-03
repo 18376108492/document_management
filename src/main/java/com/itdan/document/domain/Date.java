@@ -1,0 +1,46 @@
+package com.itdan.document.domain;
+
+import java.io.Serializable;
+
+/**
+ * 接受前端传回的树形节点类型
+ */
+public class Date implements Serializable {
+
+    private String id;
+    private String code;
+    private String name;
+
+    public Date() {
+    }
+
+    public Date(String id, String code, String name) {
+        this.id = id;
+        this.code = code;
+        this.name = name;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}

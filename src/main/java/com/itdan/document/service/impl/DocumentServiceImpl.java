@@ -85,12 +85,12 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public List<Disk> getDiskList() {
-        List<Disk> diskList=new ArrayList<>();
+        List<Disk> diskList = new ArrayList<>();
         // 需要确定好个磁盘的ID
         // 先判断redis中是否存在磁盘信息，如果不存在就从数据库中查询。
         try {
             //从redis中获取数据
-            if(jedisClient.exists("DISK_LIST")) {//判断该Key是否存在
+            if (jedisClient.exists("DISK_LIST")) {//判断该Key是否存在
                 String json = jedisClient.get("DISK_LIST");
                 diskList = JsonUtils.jsonToList(json, Disk.class);
                 if (diskList != null && diskList.size() > 0) {
@@ -105,8 +105,8 @@ public class DocumentServiceImpl implements DocumentService {
         //从数据中查询磁盘缓存数据
         diskList = diskMapper.getDiskList();
 
-        if(diskList==null||diskList.size()<=0){
-            diskList=getDisk();
+        if (diskList == null || diskList.size() <= 0) {
+            diskList = getDisk();
         }
 
         //将从数据中查询的磁盘信息存储到redis中
@@ -205,9 +205,9 @@ public class DocumentServiceImpl implements DocumentService {
             //设置根目录父类ID为0，因为根目录没有父类
             Integer parentId = KEY_PARENT_ID;
             //磁盘目录副本
-            String rootPathName=rootName;
+            String rootPathName = rootName;
             try {
-                getAllFile(nodeList, key, rootName, parentId,rootPathName);
+                getAllFile(nodeList, key, rootName, parentId, rootPathName);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -235,7 +235,7 @@ public class DocumentServiceImpl implements DocumentService {
      * @param parentId 文件父类ID
      * @return
      */
-    public DocumentFile addDocument(File f, Integer key, Integer parentId,String rootPathName) {
+    public DocumentFile addDocument(File f, Integer key, Integer parentId, String rootPathName) {
         //存储根目录
         DocumentFile documentFile = new DocumentFile();
 
@@ -271,7 +271,7 @@ public class DocumentServiceImpl implements DocumentService {
      * @param parentId 父类节点ID
      * @return
      */
-    public FancytreeNode addTreeNode(Integer key, File file, Integer parentId,String rootPathName) {
+    public FancytreeNode addTreeNode(Integer key, File file, Integer parentId, String rootPathName) {
         String nodeName = file.getName();
         FancytreeNode node = new FancytreeNode(key, file.getName(), nodeName, file.getPath(), parentId, 0);
         node.setDiskName(rootPathName);//便于表示为某盘下的节点
@@ -284,14 +284,14 @@ public class DocumentServiceImpl implements DocumentService {
      *
      * @param nodeList 树形节点集合
      * @param key      文件ID
-     * @param rootName  文件路径
+     * @param rootName 文件路径
      * @param parentId 父类节点ID
      */
     public void getAllFile(List<FancytreeNode> nodeList,
                            Integer key,
                            String rootName,
                            Integer parentId,
-                           String  rootPathName) throws FileNotFoundException {
+                           String rootPathName) throws FileNotFoundException {
         File file = new File(rootName);
         //使用树形节点集合来存储对象
         //判断文件是否存在
@@ -311,10 +311,10 @@ public class DocumentServiceImpl implements DocumentService {
             String path = file.getAbsolutePath();//获取路径
             key = Math.abs((int) IDUtils.genItemId());//设置新ID
             //添加树形节点
-            FancytreeNode tree = addTreeNode(key, file, parentId,rootPathName);
+            FancytreeNode tree = addTreeNode(key, file, parentId, rootPathName);
             nodeList.add(tree);
             //调用添加文件的方法
-            DocumentFile document = addDocument(file, key, parentId,rootPathName);
+            DocumentFile document = addDocument(file, key, parentId, rootPathName);
             documentFileMapper.addDocumentFile(document);
             //返回
             return;
@@ -326,24 +326,24 @@ public class DocumentServiceImpl implements DocumentService {
             String path = file.getAbsolutePath();
             key = Math.abs((int) IDUtils.genItemId());//设置新ID
             //添加树形节点
-            FancytreeNode tree = addTreeNode(key, file, parentId,rootPathName);
+            FancytreeNode tree = addTreeNode(key, file, parentId, rootPathName);
             nodeList.add(tree);
             //添加文件
-            DocumentFile document = addDocument(file, key, parentId,rootPathName);
+            DocumentFile document = addDocument(file, key, parentId, rootPathName);
             documentFileMapper.addDocumentFile(document);
             String[] str = file.list();
             String parent = file.getParent();
             for (int i = 0; i < str.length; i++) {
                 String s = str[i];
                 String newFilePath = path + "\\" + s;//根据当前文件夹，拼接其下文文件形成新的路径
-                getAllFile(nodeList, key, newFilePath, tree.getId(),rootPathName);
+                getAllFile(nodeList, key, newFilePath, tree.getId(), rootPathName);
             }
             // }
         }
     }
 
     @Override
-    public List  getAllFile(String diskName)  {
+    public List getAllFile(String diskName) {
         List<FancytreeNode> nodeList = new ArrayList<>();
         //判断传入的参数是否为空
         if (StringUtils.isNotBlank(diskName)) {
@@ -351,15 +351,15 @@ public class DocumentServiceImpl implements DocumentService {
             //先判断redis中是否存在磁盘信息，如果不存在就从数据库中查询。
             try {
                 //先获取redis中缓存,存储到redis时磁盘名要与数据后缀名对上，表示某盘的数据
-                   if(jedisClient.exists(ZTREE_NODE + ":" + diskName)) {
-                       //获取redis中的所有信息
-                       //String  json= jedisClient.get(ZTREE_NODE + ":" + diskName);
-                       List<String> list= jedisClient.hvals(ZTREE_NODE + ":" + diskName);
-                       if (nodeList!=null && nodeList.size()>0) {
-                           return list;
-                       }
-                   }
-            }catch (Exception e){
+                if (jedisClient.exists(ZTREE_NODE + ":" + diskName)) {
+                    //获取redis中的所有信息
+                    //String  json= jedisClient.get(ZTREE_NODE + ":" + diskName);
+                    List<String> list = jedisClient.hvals(ZTREE_NODE + ":" + diskName);
+                    if (nodeList != null && nodeList.size() > 0) {
+                        return list;
+                    }
+                }
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -380,14 +380,14 @@ public class DocumentServiceImpl implements DocumentService {
             //如果redis中节点数据为空，将查询出的树形节点，存储一份到redis中
             try {
                 //向redis中添加缓存
-               // jedisClient.set(ZTREE_NODE+":"+diskName,JsonUtils.objectToJson(nodeList));
+                // jedisClient.set(ZTREE_NODE+":"+diskName,JsonUtils.objectToJson(nodeList));
                 //改造ztree在redis中的格式string -> hset
-                for (FancytreeNode node:nodeList){
-                    jedisClient.hset(ZTREE_NODE+":"+diskName,node.getId()+"",JsonUtils.objectToJson(node));
+                for (FancytreeNode node : nodeList) {
+                    jedisClient.hset(ZTREE_NODE + ":" + diskName, node.getId() + "", JsonUtils.objectToJson(node));
                 }
                 //设置过期时间
-                jedisClient.expire(ZTREE_NODE+":"+diskName,ZTREE_NODE_TIME);
-            }catch (Exception e){
+                jedisClient.expire(ZTREE_NODE + ":" + diskName, ZTREE_NODE_TIME);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -397,37 +397,76 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public DocumentReslut addNode(String pId, String name) {
         //判断字符串是否为空
-         if(StringUtils.isNotBlank(pId) && StringUtils.isNotBlank(name)){
+        if (StringUtils.isNotBlank(pId) && StringUtils.isNotBlank(name)) {
             //先通过父类ID获取相应的信息
-            Integer id=Integer.valueOf(pId);
-            DocumentFile documentFile= documentFileMapper.getFileById(id);
+            Integer id = Integer.valueOf(pId);
+            DocumentFile documentFile = documentFileMapper.getFileById(id);
             //获取父类的文件地址
-             String fileAddr=documentFile.getFileAddr();
-             //获取父类的盘符信息
-             String diskName=documentFile.getDiskName();
-             //判断文件是否为父类文件类型,如果不为父类类型，修改并存入数据库中
-             Integer falg=documentFile.getIsParent();
-             if(falg==0){
-                 documentFile.setIsParent(1);
-                 documentFileMapper.updataFile(documentFile);
-             }
+            String fileAddr = documentFile.getFileAddr();
+            //获取父类的盘符信息
+            String diskName = documentFile.getDiskName();
+            //判断文件是否为父类文件类型,如果不为父类类型，修改并存入数据库中
+            Integer falg = documentFile.getIsParent();
+            if (falg == 0) {
+                documentFile.setIsParent(1);
+                documentFileMapper.updataFile(documentFile);
+            }
 
-             //拼接子节点路径
-             String path=fileAddr+"\'"+name;
-             //设置新ID
-             Integer key = Math.abs((int) IDUtils.genItemId());
-             //将子节点添加到数据库中
-             DocumentFile nodeFile=new DocumentFile(key,id,0,name,null,
-                                     path,name,new Date(),0,new Date(),diskName);
-             documentFileMapper.addDocumentFile(nodeFile);
+            //拼接子节点路径
+            String path = fileAddr + "\'" + name;
+            //设置新ID
+            Integer key = Math.abs((int) IDUtils.genItemId());
+            //将子节点添加到数据库中
+            DocumentFile nodeFile = new DocumentFile(key, id, 0, name, null,
+                    path, name, new Date(), 0, new Date(), diskName);
+            documentFileMapper.addDocumentFile(nodeFile);
 
             //先向树形结构添加节点
-             FancytreeNode node= addTreeNode(key,new File(path),id,diskName);
+            FancytreeNode node = addTreeNode(key, new File(path), id, diskName);
             //先数据库中添加完成后，再向redis中添加节点
-             jedisClient.hset(ZTREE_NODE+":"+diskName,key+"",JsonUtils.objectToJson(node));
-             return DocumentReslut.ok(key);//将新增的节点ID返回
+            jedisClient.hset(ZTREE_NODE + ":" + diskName, key + "", JsonUtils.objectToJson(node));
+            return DocumentReslut.ok(key);//将新增的节点ID返回
         }
 
-        return DocumentReslut.build(400,"添加节点失败");
+        return DocumentReslut.build(400, "添加节点失败");
+    }
+
+    @Override
+    public DocumentReslut updateTreeNodeName(com.itdan.document.domain.Date date) {
+        //更新数据库中文件和树形节点信息
+
+
+        return null;
+    }
+
+    @Override
+    public DocumentReslut removeZtreeNode(com.itdan.document.domain.Date date) {
+        //删除节点
+        if (date != null) {
+            //1.删除文件数据中的信息
+            //获取传入的节点ID
+            Integer id = Integer.valueOf(date.getId());
+            //获取父类节点
+            Integer pid = Integer.valueOf(date.getCode());
+            //删除文件(先查询该节点下是否有子节点)
+            Long num = documentFileMapper.countNode(id);
+            //当num不为0时,将该文件的子文件遍历出来，将父类同子类文件一起删除
+            if (num > 0) {
+                //获取子节点集合
+                List<DocumentFile> documentFiles = documentFileMapper.getListByParentId(id);
+                //获取子节点ID集合
+                for (DocumentFile documentFile:documentFiles){
+                    documentFileMapper.removeFile(id);
+                }
+            }
+            documentFileMapper.removeFile(id);
+            //修改父类文件信息
+
+
+            //2.删除树形节点信息
+            //3.删除redis中的信息
+
+        }
+        return DocumentReslut.build(400, "传入的参数为空");
     }
 }

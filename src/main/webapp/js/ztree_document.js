@@ -274,8 +274,9 @@
 				};
 				$.ajax({
 					type: 'post',
+                    contentType:"application/json;charset=UTF-8",
 					url: "/document/remove",
-					data: data,
+                    data: JSON.stringify(data),
 					timeout: 1000, //超时时间设置，单位毫秒
 					dataType: 'json',
 					success: function(res) {
@@ -335,8 +336,9 @@
 				};
 				$.ajax({
 					type: 'post',
-					url: "document/update",
-					data: data,
+                    contentType:"application/json;charset=UTF-8",
+					url: "/document/update",
+					data: JSON.stringify(data),
 					timeout: 1000, //超时时间设置，单位毫秒
 					dataType: 'json',
 					success: function(res) {

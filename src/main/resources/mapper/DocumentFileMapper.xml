@@ -109,6 +109,7 @@
     </if>
   </select>
 
+  <!--更新文件对象-->
   <update id="updataFile" parameterType="com.itdan.document.domain.DocumentFile">
     update document_file
     <set >
@@ -146,7 +147,13 @@
         diskName=#{diskName,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!--根据parent_point获取该节点下所有子节点总数-->
+<select id="countNode" parameterType="Integer" resultType="Long">
+  select count(id) from document_file
+  where parent_point = #{parent_point,jdbcType=INTEGER}
+</select>
 
 </mapper>
