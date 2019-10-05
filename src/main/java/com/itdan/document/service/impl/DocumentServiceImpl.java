@@ -490,7 +490,7 @@ public class DocumentServiceImpl implements DocumentService {
             String node_id=list[0];
             String node_pid=list[1];
             String tager_pid=list[2];
-            Integer id=Integer.valueOf(node_id);;
+            Integer id=Integer.valueOf(node_id);
             Integer pid=Integer.valueOf(node_pid);
             Integer tagerId=null;
             if(StringUtils.isNotBlank(tager_pid)){
@@ -503,25 +503,22 @@ public class DocumentServiceImpl implements DocumentService {
                     p_file.setIsParent(0);
                  documentFileMapper.updateFile(p_file);
                 }
+
             //2.将文件的父文件ID该为目标父文件
             if (tagerId==null) {
-                 //设置文件的父类ID=0
-                  DocumentFile node_file= documentFileMapper.getFileById(id);
-                  //更新文件
-                  node_file.setParentPoint(0);
-                  documentFileMapper.updateFile(node_file);
-                  //更新树形节点
-                  FancytreeNode node=fancytreeNodeMapper.getNodeById(id);
-                  node.setpId(0);
-                  fancytreeNodeMapper.updateNode(node);
-                  //更新redis
-                  jedisClient.hdel(ZTREE_NODE + ":" + node.getDiskName(),node.getId()+"" );
-                  jedisClient.hset(ZTREE_NODE + ":" + node.getDiskName(),node.getId()+"" ,JsonUtils.objectToJson(node));
-                }
-
-
-            //3.判断目标父类文件下的子文件数量是否等于0，如果是将信息修改
-
+                    //设置父类节点为0
+                setTargerParent(id,0);
+            }else {
+                setTargerParent(id,tagerId);
+                //3.判断目标父类文件下的子文件数量是否等于0，如果是将信息修改
+                 Long number=documentFileMapper.countNode(tagerId);
+                 if(number==1){
+                  DocumentFile tager_file= documentFileMapper.getFileById(tagerId);
+                  tager_file.setIsParent(1);
+                  documentFileMapper.updateFile(tager_file);
+                 }
+            }
+            return DocumentReslut.ok();
         }
         return DocumentReslut.build(400, "传入的参数为空");
     }
@@ -563,6 +560,26 @@ public class DocumentServiceImpl implements DocumentService {
         fancytreeNodeMapper.deleteAllFile(diskName);
         //清空rides
         jedisClient.del(ZTREE_NODE + ":" + diskName);
+    }
+
+    /**
+     * 设置指定文件和节点的父类ID
+     * @param id
+     * @param tagerId
+     */
+    public void setTargerParent(Integer id,Integer tagerId){
+        //设置文件的父类
+        DocumentFile node_file= documentFileMapper.getFileById(id);
+        //更新文件
+        node_file.setParentPoint(tagerId);
+        documentFileMapper.updateFile(node_file);
+        //更新树形节点
+        FancytreeNode node=fancytreeNodeMapper.getNodeById(id);
+        node.setpId(tagerId);
+        fancytreeNodeMapper.updateNode(node);
+        //更新redis
+        jedisClient.hdel(ZTREE_NODE + ":" + node.getDiskName(),node.getId()+"" );
+        jedisClient.hset(ZTREE_NODE + ":" + node.getDiskName(),node.getId()+"" ,JsonUtils.objectToJson(node));
     }
 
 }
