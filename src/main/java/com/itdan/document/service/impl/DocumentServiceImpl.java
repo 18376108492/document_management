@@ -14,6 +14,7 @@ import com.itdan.document.utils.common.JsonUtils;
 import com.itdan.document.utils.jedis.JedisClient;
 import com.itdan.document.utils.result.DocumentReslut;
 import org.apache.commons.lang.StringUtils;
+import org.omg.PortableInterceptor.INACTIVE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -409,7 +410,7 @@ public class DocumentServiceImpl implements DocumentService {
             Integer falg = documentFile.getIsParent();
             if (falg == 0) {
                 documentFile.setIsParent(1);
-                documentFileMapper.updataFile(documentFile);
+                documentFileMapper.updateFile(documentFile);
             }
 
             //拼接子节点路径
@@ -446,27 +447,122 @@ public class DocumentServiceImpl implements DocumentService {
             //1.删除文件数据中的信息
             //获取传入的节点ID
             Integer id = Integer.valueOf(date.getId());
+            //判断该文件是否为是否为根文件
+            DocumentFile documentFile = documentFileMapper.getFileById(id);
+            Integer parentPoint = documentFile.getParentPoint();
+            //获取磁盘名
+            String diskName = documentFile.getDiskName();
+            if (parentPoint == 0) {
+                deleteAllFile(diskName);
+                return DocumentReslut.ok();
+            }
             //获取父类节点
             Integer pid = Integer.valueOf(date.getCode());
             //删除文件(先查询该节点下是否有子节点)
-            Long num = documentFileMapper.countNode(id);
-            //当num不为0时,将该文件的子文件遍历出来，将父类同子类文件一起删除
-            if (num > 0) {
-                //获取子节点集合
-                List<DocumentFile> documentFiles = documentFileMapper.getListByParentId(id);
-                //获取子节点ID集合
-                for (DocumentFile documentFile:documentFiles){
-                    documentFileMapper.removeFile(id);
-                }
-            }
-            documentFileMapper.removeFile(id);
+            //根据传入的ID判断其下是否有子节点
+            List<Integer> idList = new ArrayList<>();
+            idList = deleteAllChildFile(id, idList);
+            System.out.println(idList.toString());
             //修改父类文件信息
+            Long num = documentFileMapper.countNode(pid);
+            if (num == 0) {
+                //说明删除节点后，其父节点下没有子节点了
+                //获取父类信息
+                DocumentFile parentFile = documentFileMapper.getFileById(pid);
+                parentFile.setIsParent(0);//将是否为父类文件修改为0
+                documentFileMapper.updateFile(parentFile);//更新数据库中的数据
+            }
+
+            for (Integer node_id : idList) {
+                //2.删除树形节点信息
+                fancytreeNodeMapper.removeNode(node_id);
+                //3.删除redis中的信息
+                jedisClient.hdel(ZTREE_NODE + ":" + diskName, node_id + "");
+            }
+            return DocumentReslut.ok();
+        }
+        return DocumentReslut.build(400, "传入的参数为空");
+    }
+
+    @Override
+    public DocumentReslut dropZtreeNode(String[] list) {
+        if(list.length>0 && list!=null){
+            String node_id=list[0];
+            String node_pid=list[1];
+            String tager_pid=list[2];
+            Integer id=Integer.valueOf(node_id);;
+            Integer pid=Integer.valueOf(node_pid);
+            Integer tagerId=null;
+            if(StringUtils.isNotBlank(tager_pid)){
+                tagerId=Integer.valueOf(tager_pid);
+            }
+            //1.判断父类文件下的子文件数量是否大于1，如果不是将信息修改
+                Long num = documentFileMapper.countNode(pid);
+                if(num==1){//等于1，说明该文件夹下只有该文件
+                 DocumentFile p_file=documentFileMapper.getFileById(pid);
+                    p_file.setIsParent(0);
+                 documentFileMapper.updateFile(p_file);
+                }
+            //2.将文件的父文件ID该为目标父文件
+            if (tagerId==null) {
+                 //设置文件的父类ID=0
+                  DocumentFile node_file= documentFileMapper.getFileById(id);
+                  //更新文件
+                  node_file.setParentPoint(0);
+                  documentFileMapper.updateFile(node_file);
+                  //更新树形节点
+                  FancytreeNode node=fancytreeNodeMapper.getNodeById(id);
+                  node.setpId(0);
+                  fancytreeNodeMapper.updateNode(node);
+                  //更新redis
+                  jedisClient.hdel(ZTREE_NODE + ":" + node.getDiskName(),node.getId()+"" );
+                  jedisClient.hset(ZTREE_NODE + ":" + node.getDiskName(),node.getId()+"" ,JsonUtils.objectToJson(node));
+                }
 
 
-            //2.删除树形节点信息
-            //3.删除redis中的信息
+            //3.判断目标父类文件下的子文件数量是否等于0，如果是将信息修改
 
         }
         return DocumentReslut.build(400, "传入的参数为空");
     }
+
+
+    /**
+     * 通过ID判断其文件下是否有子文件，并将其删除
+     * @param id
+     * @param idList
+     */
+    public List<Integer> deleteAllChildFile(Integer id, List<Integer> idList) {
+        //删除文件(先查询该节点下是否有子节点)
+        //获取其子类文件列表
+        List<DocumentFile> documentFiles = documentFileMapper.getListByParentId(id);
+        if (documentFiles != null && documentFiles.size() > 0) {
+            for (int i = 0; i < documentFiles.size(); i++) {
+                //记得将文件夹的节点ID也加入集合中，否则文件会清理不干净
+                idList.add(documentFiles.get(i).getId());
+                int node_id=documentFiles.get(i).getId();
+                //删除文件夹文件
+                documentFileMapper.removeFile(documentFiles.get(i).getId());
+                deleteAllChildFile(node_id, idList);
+            }
+        } else {
+            idList.add(id);
+            documentFileMapper.removeFile(id);
+        }
+        return idList;
+    }
+
+    /**
+     * 清楚指定磁盘的全部数据
+     * @param diskName
+     */
+    public void deleteAllFile(String diskName){
+        //删除该盘下的所有文件
+        documentFileMapper.deleteAllFile(diskName);
+        //删除树形节点
+        fancytreeNodeMapper.deleteAllFile(diskName);
+        //清空rides
+        jedisClient.del(ZTREE_NODE + ":" + diskName);
+    }
+
 }

@@ -44,7 +44,7 @@ public interface DocumentFileMapper {
      * 更新文件对象
      * @param documentFile
      */
-    void updataFile(DocumentFile documentFile);
+    void updateFile(DocumentFile documentFile);
 
     /**
      * 根据parent_point获取该节点下所有子节点总数
@@ -58,4 +58,15 @@ public interface DocumentFileMapper {
      * @param id
      */
     void removeFile(@Param(value ="id")Integer id);
+
+    /**
+     * 删除所有父节点为parent_point值的文件
+     * @param parent_point
+     */
+    void deleteAllChildFile(@Param(value ="parent_point")Integer parent_point);
+
+    /**
+     * 删除所有文件
+     */
+    void deleteAllFile(@Param(value ="diskName")String diskName);
 }

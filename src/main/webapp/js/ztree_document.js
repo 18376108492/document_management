@@ -2,14 +2,29 @@
 			//var setting={};
 			// zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
 			var setting = {
+                // async: {
+                //     enable: true,//设置 zTree 是否开启异步加载模式
+                //     url:"../asyncData/getNodes.php",
+                //     autoParam:["id", "name=n", "level=lv"],
+                //     otherParam:{"otherParam":"zTreeAsyncTest"},
+                //     dataFilter: filter
+                // },
 				//是否允许编辑节点
 				edit: {
+                    drag: {
+                        autoExpandTrigger: true,
+                        prev: dropPrev,
+                        inner: dropInner,
+                        next: dropNext
+                    },
 					enable: true,
 					editNameSelectAll: true,
 					showRemoveBtn: true,
 					removeTitle: "删除节点",
 					showRenameBtn: true,
-					renameTitle: "编辑节点"
+					renameTitle: "编辑节点",
+                    showRemoveBtn: showRemoveBtn,
+                    showRenameBtn: showRenameBtn
 				},
 				data: {
 					key: {
@@ -20,14 +35,15 @@
 					}
 				},
 				callback: {
-					//beforeRemove: beforeRemove, //移除前
-					//beforeRename: beforeRename, //重命名前
-					//onRemove: onRemove,
-					//onRename: onRename,
-					//beforeDrag:beforeDrag,
-					onClick: zTreeOnClick, //注册节点的点击事件
+					onClick: zTreeOnClick, //注册节点的点击事件(单击事件)
+                    onDblClick: OnDblClick,//双击事件
 					beforeDrag: beforeDrag, //用于捕获节点被拖拽之前的事件回调函数，并且根据返回值确定是否允许开启拖拽操作
 					beforeDrop: beforeDrop,
+                    beforeDragOpen: beforeDragOpen,
+                    onDrag: onDrag,
+                    onDrop: onDrop,
+                    onExpand: onExpand,
+
 					beforeEditName: beforeEditName,
 					beforeRemove: beforeRemove,
 					beforeRename: beforeRename,
@@ -42,13 +58,8 @@
 				},
 				check: {
 					enable: true
-				},
-				edit: {
-					enable: true,
-					editNameSelectAll: true,
-					showRemoveBtn: showRemoveBtn,
-					showRenameBtn: showRenameBtn
-				},
+				}
+
 			};
 
             function getQueryString(name) {
@@ -95,12 +106,21 @@
 				count();
 			});
 
-			//用于捕获节点被点击的事件回调函数 
+
+
+
+			//用于捕获节点被点击的事件回调函数（单击事件）
 			//如果设置了 setting.callback.beforeClick 方法，且返回 false，将无法触发 onClick 事件回调函数
 			function zTreeOnClick(event, treeId, treeNode) {
 				alert(treeNode.tId + ", " + treeNode.name);
 				count();
 			};
+
+            //双击事件：清除定时器，展开点击的树结构
+            function OnDblClick(e, treeId, treeNode) {
+            }
+
+
 
 			function count() {
 				function isForceHidden(node) {
@@ -175,18 +195,6 @@
 				count();
 			}
 
-			function beforeDrag(treeId, treeNodes) {
-				for(var i = 0, l = treeNodes.length; i < l; i++) {
-					if(treeNodes[i].drag === false) {
-						return false;
-					}
-				}
-				return true;
-			}
-
-			function beforeDrop(treeId, treeNodes, targetNode, moveType) {
-				return targetNode ? targetNode.drop !== false : true;
-			}
 
 			function setCheck() {
 				var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
@@ -217,9 +225,6 @@
 			//节点的编辑
 			var log, className = "dark";
 
-			function beforeDrag(treeId, treeNodes) {
-				return false;
-			}
 
 			function beforeEditName(treeId, treeNode) {
 				className = (className === "dark" ? "" : "dark");
@@ -277,7 +282,6 @@
                     contentType:"application/json;charset=UTF-8",
 					url: "/document/remove",
                     data: JSON.stringify(data),
-					timeout: 1000, //超时时间设置，单位毫秒
 					dataType: 'json',
 					success: function(res) {
 						layer.msg(res.msg)
@@ -355,22 +359,9 @@
 				return !treeNode.isLastNode;
 			}
 
-			function showLog(str) {
-				if(!log) log = $("#log");
-				log.append("<li class='" + className + "'>" + str + "</li>");
-				if(log.children("li").length > 8) {
-					log.get(0).removeChild(log.children("li")[0]);
-				}
-			}
 
-			function getTime() {
-				var now = new Date(),
-					h = now.getHours(),
-					m = now.getMinutes(),
-					s = now.getSeconds(),
-					ms = now.getMilliseconds();
-				return(h + ":" + m + ":" + s + " " + ms);
-			}
+
+
 
 			var newCount = 1;
 
@@ -435,3 +426,147 @@
 				var zTree = $.fn.zTree.getZTreeObj("treeDemo");
 				zTree.setting.edit.editNameSelectAll = $("#selectAll").attr("checked");
 			}
+
+
+            //拖拽到目标节点时，设置是否允许移动到目标节点前面的操作。
+			// [setting.edit.enable = true 时生效]
+            //拖拽目标是 根 的时候，不触发 prev 和 next，只会触发 inner
+            //此功能主要作用是对拖拽进行适当限制（辅助箭头），
+			// 需要结合 next、inner 一起使用，才能实现完整功能。
+            function dropPrev(treeId, nodes, targetNode) {
+                var pNode = targetNode.getParentNode();
+                //alert("pNodePrev:"+pNode);
+                if (pNode && pNode.dropInner === false) {
+                    return false;
+                } else {
+                    for (var i=0,l=curDragNodes.length; i<l; i++) {
+                        var curPNode = curDragNodes[i].getParentNode();
+                        if (curPNode && curPNode !== targetNode.getParentNode() && curPNode.childOuter === false) {
+                            return false;
+                        }
+                       // alert("curPNode:"+curPNode);
+                    }
+                }
+                return true;
+            }
+
+            //拖拽到目标节点时，设置是否允许成为目标节点的子节点。
+			// [setting.edit.enable = true 时生效]
+            //拖拽目标是 根 的时候，不触发 prev 和 next，只会触发 inner
+            //此功能主要作用是对拖拽进行适当限制（辅助箭头），
+			// 需要结合 prev、next 一起使用，才能实现完整功能。
+            function dropInner(treeId, nodes, targetNode) {
+                if (targetNode && targetNode.dropInner === false) {
+                    return false;
+                } else {
+                    for (var i=0,l=curDragNodes.length; i<l; i++) {
+                        if (!targetNode && curDragNodes[i].dropRoot === false) {
+                            return false;
+                        } else if (curDragNodes[i].parentTId && curDragNodes[i].getParentNode() !== targetNode && curDragNodes[i].getParentNode().childOuter === false) {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+
+            //拖拽到目标节点时，设置是否允许成为目标节点的子节点。
+			// [setting.edit.enable = true 时生效]
+            //拖拽目标是 根 的时候，不触发 prev 和 next，只会触发 inner
+            //此功能主要作用是对拖拽进行适当限制（辅助箭头），
+			// 需要结合 prev、next 一起使用，才能实现完整功能。
+            function dropNext(treeId, nodes, targetNode) {
+                var pNode = targetNode.getParentNode();
+               // alert("pNodeNext:"+pNode);
+                if (pNode && pNode.dropInner === false) {
+                    return false;
+                } else {
+                    for (var i=0,l=curDragNodes.length; i<l; i++) {
+                        var curPNode = curDragNodes[i].getParentNode();
+                        //alert("curPNode:"+curPNode);
+                        if (curPNode && curPNode !== targetNode.getParentNode() && curPNode.childOuter === false) {
+                            return false;
+                        }
+                    }
+                }
+                var list=[];
+                list.push(nodes[0].id);//移动的文件ID
+                list.push(nodes[0].pid);//移动的父类文件ID
+                list.push(targetNode.id);//移动后的夫文件ID
+
+                $.ajax({
+                    type: 'post',
+                    contentType:"application/json;charset=UTF-8",
+                    url: "/document/drop",
+                    data: JSON.stringify(list),
+                    timeout: 6000, //超时时间设置，单位毫秒
+                    dataType: 'json',
+                    success: function(res) {
+                        layer.msg(res.msg)
+                    }
+                });
+                return true;
+            }
+
+            var log, className = "dark", curDragNodes, autoExpandNode;
+            function beforeDrag(treeId, treeNodes) {
+                className = (className === "dark" ? "":"dark");
+                showLog("[ "+getTime()+" beforeDrag ]&nbsp;&nbsp;&nbsp;&nbsp; drag: " + treeNodes.length + " nodes." );
+                for (var i=0,l=treeNodes.length; i<l; i++) {
+                    if (treeNodes[i].drag === false) {
+                        curDragNodes = null;
+                        return false;
+                    } else if (treeNodes[i].parentTId && treeNodes[i].getParentNode().childDrag === false) {
+                        curDragNodes = null;
+                        return false;
+                    }
+                }
+                curDragNodes = treeNodes;
+                return true;
+            }
+            function beforeDragOpen(treeId, treeNode) {
+                autoExpandNode = treeNode;
+                return true;
+            }
+            function beforeDrop(treeId, treeNodes, targetNode, moveType, isCopy) {
+                className = (className === "dark" ? "":"dark");
+                showLog("[ "+getTime()+" beforeDrop ]&nbsp;&nbsp;&nbsp;&nbsp; moveType:" + moveType);
+                showLog("target: " + (targetNode ? targetNode.name : "root") + "  -- is "+ (isCopy==null? "cancel" : isCopy ? "copy" : "move"));
+                return true;
+            }
+            function onDrag(event, treeId, treeNodes) {
+                className = (className === "dark" ? "":"dark");
+                showLog("[ "+getTime()+" onDrag ]&nbsp;&nbsp;&nbsp;&nbsp; drag: " + treeNodes.length + " nodes." );
+            }
+            function onDrop(event, treeId, treeNodes, targetNode, moveType, isCopy) {
+                className = (className === "dark" ? "":"dark");
+                showLog("[ "+getTime()+" onDrop ]&nbsp;&nbsp;&nbsp;&nbsp; moveType:" + moveType);
+                showLog("target: " + (targetNode ? targetNode.name : "root") + "  -- is "+ (isCopy==null? "cancel" : isCopy ? "copy" : "move"))
+            }
+            function onExpand(event, treeId, treeNode) {
+                if (treeNode === autoExpandNode) {
+                    className = (className === "dark" ? "":"dark");
+                    showLog("[ "+getTime()+" onExpand ]&nbsp;&nbsp;&nbsp;&nbsp;" + treeNode.name);
+                }
+            }
+
+            function showLog(str) {
+                if (!log) log = $("#log");
+                log.append("<li class='"+className+"'>"+str+"</li>");
+                if(log.children("li").length > 8) {
+                    log.get(0).removeChild(log.children("li")[0]);
+                }
+            }
+            function getTime() {
+                var now= new Date(),
+                    h=now.getHours(),
+                    m=now.getMinutes(),
+                    s=now.getSeconds(),
+                    ms=now.getMilliseconds();
+                return (h+":"+m+":"+s+ " " +ms);
+            }
+
+            function setTrigger() {
+                var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+                zTree.setting.edit.drag.autoExpandTrigger = $("#callbackTrigger").attr("checked");
+            }

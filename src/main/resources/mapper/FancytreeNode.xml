@@ -73,4 +73,58 @@
     </if>
   </select>
 
+  <!--根据id删除节点-->
+  <delete id="removeNode" parameterType="Integer">
+    delete from tree_node
+    where
+    <if test="id != null" >
+      id=#{id}
+    </if>
+  </delete>
+
+  <!--清空指定磁盘下的树形节点-->
+  <delete id="deleteAllFile"  parameterType="java.lang.String" >
+    delete from tree_node
+    where
+    <if test="diskName != null" >
+      disk_name=#{diskName}
+    </if>
+  </delete>
+
+  <!--根据ID获取相应的节点信息-->
+  <select id="getNodeById" parameterType="Integer"  resultMap="BaseResultMap">
+    select * from tree_node
+    where
+    <if test="id != null" >
+      id=#{id}
+    </if>
+  </select>
+
+  <!--更新节点信息-->
+  <update id="updateNode" parameterType="com.itdan.document.domain.FancytreeNode">
+    update  tree_node
+    <set>
+      <if test="id != null" >
+        id=#{id,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        title=#{title,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name=#{name,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null" >
+        path=#{path,jdbcType=VARCHAR},
+      </if>
+      <if test="pId != null" >
+        pId=#{pId,jdbcType=INTEGER},
+      </if>
+      <if test="isHidden != null" >
+        isHidden=#{isHidden,jdbcType=INTEGER},
+      </if>
+      <if test="diskName != null" >
+        disk_name=#{diskName,jdbcType=VARCHAR}
+      </if>
+    </set>
+  </update>
 </mapper>

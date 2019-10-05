@@ -110,7 +110,7 @@
   </select>
 
   <!--更新文件对象-->
-  <update id="updataFile" parameterType="com.itdan.document.domain.DocumentFile">
+  <update id="updateFile" parameterType="com.itdan.document.domain.DocumentFile">
     update document_file
     <set >
       <if test="id != null" >
@@ -156,4 +156,20 @@
   where parent_point = #{parent_point,jdbcType=INTEGER}
 </select>
 
+  <!--根据ID删除相应的文档信息-->
+<delete id="removeFile" parameterType="Integer">
+  delete  from document_file
+  where id = #{id,jdbcType=INTEGER}
+</delete>
+
+ <!--删除所有父节点为parent_point值的文件-->
+ <delete id="deleteAllChildFile" parameterType="Integer">
+  delete  from document_file
+  where parent_point = #{parent_point,jdbcType=INTEGER}
+ </delete>
+<!--删除所有文件-->
+  <delete id="deleteAllFile" parameterType="java.lang.String">
+    delete  from  document_file
+    where diskName= #{diskName,jdbcType=VARCHAR}
+  </delete>
 </mapper>

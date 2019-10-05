@@ -22,4 +22,29 @@ public interface FancytreeNodeMapper {
      * @return
      */
     List<FancytreeNode> getAllFile(@Param(value = "diskName") String diskName);
+
+    /**
+     * 根据id删除节点
+     * @param id
+     */
+    void removeNode(@Param(value = "id") Integer id);
+
+    /**
+     * 清空指定磁盘下的树形节点
+     * @param diskName
+     */
+    void deleteAllFile(@Param(value = "diskName") String diskName);
+
+    /**
+     * 根据ID获取相应的节点信息
+     * @param id
+     * @return
+     */
+    FancytreeNode getNodeById(@Param(value = "id") Integer id);
+
+    /**
+     * 更新节点信息
+     * @param fancytreeNode
+     */
+    void updateNode(FancytreeNode fancytreeNode);
 }

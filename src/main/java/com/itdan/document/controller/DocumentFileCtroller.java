@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.net.URLDecoder;
 
 /**
  * 磁盘控制层
@@ -67,5 +66,18 @@ public class DocumentFileCtroller {
           DocumentReslut documentReslut= documentService.removeZtreeNode(date);
           return JsonUtils.objectToJson(documentReslut);
     }
+
+    /**
+     * 拖拽树形节点
+     * @param list
+     * @return
+     */
+    @RequestMapping(value = "/document/drop",method = RequestMethod.POST)
+    @ResponseBody
+    public String dropZtreeNode(@RequestBody String[] list){
+       DocumentReslut documentReslut=documentService.dropZtreeNode(list);
+        return JsonUtils.objectToJson(documentReslut);
+    }
+
 
 }

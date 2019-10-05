@@ -112,4 +112,11 @@ public interface DocumentService  {
      * @return
      */
     DocumentReslut removeZtreeNode(Date date);
+
+    /**
+     * 拖拽节点
+     * @param list
+     * @return
+     */
+    DocumentReslut dropZtreeNode(String [] list);
 }
