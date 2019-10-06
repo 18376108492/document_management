@@ -435,9 +435,26 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public DocumentReslut updateTreeNodeName(com.itdan.document.domain.Date date) {
         //更新数据库中文件和树形节点信息
-
-
-        return null;
+        if(date!=null){
+            Integer id=Integer.valueOf(date.getId());
+            String name=date.getName();
+            //1.获取指定ID的文件信息,将文件名修改
+            DocumentFile node_file=documentFileMapper.getFileById(id);
+            node_file.setFileName(name);
+            String path=DocumentUtils.getNodePath(node_file.getFileAddr(),name);
+            node_file.setFileAddr(path);
+            documentFileMapper.updateFile(node_file);
+            //2.修改树形节点
+            FancytreeNode fancytreeNode= fancytreeNodeMapper.getNodeById(id);
+            fancytreeNode.setName(name);
+            fancytreeNode.setPath(path);
+            fancytreeNodeMapper.updateNode(fancytreeNode);
+            //3.修改redis中的节点信息
+            jedisClient.hdel(ZTREE_NODE + ":" + fancytreeNode.getDiskName(), fancytreeNode.getId() + "");
+            jedisClient.hset(ZTREE_NODE + ":" + fancytreeNode.getDiskName(), fancytreeNode.getId() + "", JsonUtils.objectToJson(fancytreeNode));
+           return DocumentReslut.ok();
+        }
+        return DocumentReslut.build(400, "添加节点失败");
     }
 
     @Override
@@ -486,37 +503,44 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public DocumentReslut dropZtreeNode(String[] list) {
-        if(list.length>0 && list!=null){
-            String node_id=list[0];
-            String node_pid=list[1];
-            String tager_pid=list[2];
-            Integer id=Integer.valueOf(node_id);
-            Integer pid=Integer.valueOf(node_pid);
-            Integer tagerId=null;
-            if(StringUtils.isNotBlank(tager_pid)){
-                tagerId=Integer.valueOf(tager_pid);
+        if (list.length > 0 && list != null) {
+            String node_id = list[0];
+            String node_pid = list[1];
+            String tager_pid = list[2];
+            Integer id = Integer.valueOf(node_id);
+            Integer pid = null;
+            Integer tagerId = null;
+            if (StringUtils.isNotBlank(node_pid)) {
+                pid = Integer.valueOf(node_pid);
+            }
+            if (StringUtils.isNotBlank(tager_pid)) {
+                tagerId = Integer.valueOf(tager_pid);
             }
             //1.判断父类文件下的子文件数量是否大于1，如果不是将信息修改
+            if (pid == null) {
+                setTargerParent(id, 0);
+                return DocumentReslut.ok();
+            } else {
                 Long num = documentFileMapper.countNode(pid);
-                if(num==1){//等于1，说明该文件夹下只有该文件
-                 DocumentFile p_file=documentFileMapper.getFileById(pid);
+                if (num == 1) {//等于1，说明该文件夹下只有该文件
+                    DocumentFile p_file = documentFileMapper.getFileById(pid);
                     p_file.setIsParent(0);
-                 documentFileMapper.updateFile(p_file);
+                    documentFileMapper.updateFile(p_file);
                 }
-
+            }
             //2.将文件的父文件ID该为目标父文件
-            if (tagerId==null) {
-                    //设置父类节点为0
-                setTargerParent(id,0);
-            }else {
-                setTargerParent(id,tagerId);
+            if (tagerId == null) {
+                //设置父类节点为0
+                setTargerParent(id, 0);
+            } else {
+                setTargerParent(id, tagerId);
                 //3.判断目标父类文件下的子文件数量是否等于0，如果是将信息修改
-                 Long number=documentFileMapper.countNode(tagerId);
-                 if(number==1){
-                  DocumentFile tager_file= documentFileMapper.getFileById(tagerId);
-                  tager_file.setIsParent(1);
-                  documentFileMapper.updateFile(tager_file);
-                 }
+                Long number = documentFileMapper.countNode(tagerId);
+                if (number == 1) {
+                    DocumentFile tager_file = documentFileMapper.getFileById(tagerId);
+                    tager_file.setIsParent(1);
+                    documentFileMapper.updateFile(tager_file);
+                }
             }
             return DocumentReslut.ok();
         }
@@ -526,6 +550,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     /**
      * 通过ID判断其文件下是否有子文件，并将其删除
+     *
      * @param id
      * @param idList
      */
@@ -537,7 +562,7 @@ public class DocumentServiceImpl implements DocumentService {
             for (int i = 0; i < documentFiles.size(); i++) {
                 //记得将文件夹的节点ID也加入集合中，否则文件会清理不干净
                 idList.add(documentFiles.get(i).getId());
-                int node_id=documentFiles.get(i).getId();
+                int node_id = documentFiles.get(i).getId();
                 //删除文件夹文件
                 documentFileMapper.removeFile(documentFiles.get(i).getId());
                 deleteAllChildFile(node_id, idList);
@@ -551,9 +576,10 @@ public class DocumentServiceImpl implements DocumentService {
 
     /**
      * 清楚指定磁盘的全部数据
+     *
      * @param diskName
      */
-    public void deleteAllFile(String diskName){
+    public void deleteAllFile(String diskName) {
         //删除该盘下的所有文件
         documentFileMapper.deleteAllFile(diskName);
         //删除树形节点
@@ -564,22 +590,23 @@ public class DocumentServiceImpl implements DocumentService {
 
     /**
      * 设置指定文件和节点的父类ID
+     *
      * @param id
      * @param tagerId
      */
-    public void setTargerParent(Integer id,Integer tagerId){
+    public void setTargerParent(Integer id, Integer tagerId) {
         //设置文件的父类
-        DocumentFile node_file= documentFileMapper.getFileById(id);
+        DocumentFile node_file = documentFileMapper.getFileById(id);
         //更新文件
         node_file.setParentPoint(tagerId);
         documentFileMapper.updateFile(node_file);
         //更新树形节点
-        FancytreeNode node=fancytreeNodeMapper.getNodeById(id);
+        FancytreeNode node = fancytreeNodeMapper.getNodeById(id);
         node.setpId(tagerId);
         fancytreeNodeMapper.updateNode(node);
         //更新redis
-        jedisClient.hdel(ZTREE_NODE + ":" + node.getDiskName(),node.getId()+"" );
-        jedisClient.hset(ZTREE_NODE + ":" + node.getDiskName(),node.getId()+"" ,JsonUtils.objectToJson(node));
+        jedisClient.hdel(ZTREE_NODE + ":" + node.getDiskName(), node.getId() + "");
+        jedisClient.hset(ZTREE_NODE + ":" + node.getDiskName(), node.getId() + "", JsonUtils.objectToJson(node));
     }
 
 }

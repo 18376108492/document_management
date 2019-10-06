@@ -104,9 +104,9 @@
   <update id="updateNode" parameterType="com.itdan.document.domain.FancytreeNode">
     update  tree_node
     <set>
-      <if test="id != null" >
-        id=#{id,jdbcType=INTEGER},
-      </if>
+      <!--<if test="id != null" >-->
+        <!--id=#{id,jdbcType=INTEGER},-->
+      <!--</if>-->
       <if test="title != null" >
         title=#{title,jdbcType=VARCHAR},
       </if>
@@ -123,8 +123,12 @@
         isHidden=#{isHidden,jdbcType=INTEGER},
       </if>
       <if test="diskName != null" >
-        disk_name=#{diskName,jdbcType=VARCHAR}
+        disk_name=#{diskName,jdbcType=VARCHAR},
       </if>
     </set>
+    where
+    <if test="id != null" >
+    id=#{id,jdbcType=INTEGER}
+    </if>
   </update>
 </mapper>

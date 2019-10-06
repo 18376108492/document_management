@@ -178,4 +178,20 @@ public class DocumentUtils {
         }
     }
 
+    /**
+     * 获取文档路径
+     * @param oldPath
+     * @param tagerPath
+     * @return
+     */
+    public static String getNodePath(String oldPath,String tagerPath){
+        StringBuilder stringBuilder=new StringBuilder(oldPath);
+        String addr02=stringBuilder.reverse().toString();
+        int index=DocumentUtils.getCharacterPosition(addr02,"/",1);
+        String addr03=addr02.substring(index);
+        stringBuilder=new StringBuilder(addr03);
+        String addr04=stringBuilder.reverse().toString();
+        return addr04+tagerPath;
+    }
+
 }

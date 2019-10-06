@@ -359,10 +359,6 @@
 				return !treeNode.isLastNode;
 			}
 
-
-
-
-
 			var newCount = 1;
 
 			function addHoverDom(treeId, treeNode) {
@@ -489,22 +485,7 @@
                         }
                     }
                 }
-                var list=[];
-                list.push(nodes[0].id);//移动的文件ID
-                list.push(nodes[0].pid);//移动的父类文件ID
-                list.push(targetNode.id);//移动后的夫文件ID
 
-                $.ajax({
-                    type: 'post',
-                    contentType:"application/json;charset=UTF-8",
-                    url: "/document/drop",
-                    data: JSON.stringify(list),
-                    timeout: 6000, //超时时间设置，单位毫秒
-                    dataType: 'json',
-                    success: function(res) {
-                        layer.msg(res.msg)
-                    }
-                });
                 return true;
             }
 
@@ -542,6 +523,24 @@
                 className = (className === "dark" ? "":"dark");
                 showLog("[ "+getTime()+" onDrop ]&nbsp;&nbsp;&nbsp;&nbsp; moveType:" + moveType);
                 showLog("target: " + (targetNode ? targetNode.name : "root") + "  -- is "+ (isCopy==null? "cancel" : isCopy ? "copy" : "move"))
+
+                var list=[];
+                list.push(treeNodes[0].id);//移动的文件ID
+                list.push(treeNodes[0].pId);//移动的父类文件ID
+                list.push(targetNode.id);//移动后的夫文件ID
+
+                $.ajax({
+                    type: 'post',
+                    contentType:"application/json;charset=UTF-8",
+                    url: "/document/drop",
+                    data: JSON.stringify(list),
+                    timeout: 6000, //超时时间设置，单位毫秒
+                    dataType: 'json',
+                    success: function(res) {
+                        layer.msg(res.msg)
+                    }
+                });
+
             }
             function onExpand(event, treeId, treeNode) {
                 if (treeNode === autoExpandNode) {

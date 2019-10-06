@@ -160,4 +160,16 @@ public class ZtreeTest extends BaseTest {
         System.out.println(num>0);
     }
 
+    @Test
+    public void testDemo09() throws Exception{
+     //测试path拼接
+     String addr01="D:/ge/css";
+     StringBuilder stringBuilder=new StringBuilder(addr01);
+     String addr02=stringBuilder.reverse().toString();
+     int index=DocumentUtils.getCharacterPosition(addr02,"/",1);
+     String addr03=addr02.substring(index);
+     stringBuilder=new StringBuilder(addr03);
+     String addr04=stringBuilder.reverse().toString();
+     System.out.println(addr04);
+    }
 }
