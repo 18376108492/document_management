@@ -40,6 +40,8 @@
 		<!-- 给出需要扫描Dao接口包 -->
 		<property name="basePackage" value="com.itdan.document.dao" />
 	</bean>
-
+	<!--配置SearchMapper-->
+	<bean id="searchMapper" class="com.itdan.document.dao.SearchMapper">
+	</bean>
 
 </beans>

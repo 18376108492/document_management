@@ -17,7 +17,15 @@
 <div class="am-cf am-padding">
     <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">磁盘主页</strong> /
         <small>本地磁盘</small>
-    </div>
+    </div >
+    <div class="am-lg-text-right">
+        <form  id="search_from" role="search" action="/node/search"  method="get">
+        <div class="form-group">
+            <input type="text"   id="search_keyword" name="keyword" class="am-icon-search" placeholder="Search" >
+            <button type="submit" onclick=  id="bullet-button">搜索</button>
+            <span id="span_keyword"></span>
+        </div>
+    </form></div>
 </div>
 
 
@@ -57,11 +65,6 @@
 <script src="../../base-component/amazeui/js/amazeui.min.js"></script>
 <script src="../../base-component/layer/layer.js"></script>
 <script>
-    $('#refsh').on('click', function () {
-        alert(window.location.href);
-        window.location.href = "http://blog.csdn.net/";
-    });
-
     //点击初始化磁盘数据
     $("#load_button").on('click', function () {
         alert("磁盘初始化时间较长，是否选择等待.");

@@ -441,13 +441,13 @@ public class DocumentServiceImpl implements DocumentService {
             //1.获取指定ID的文件信息,将文件名修改
             DocumentFile node_file=documentFileMapper.getFileById(id);
             node_file.setFileName(name);
-            String path=DocumentUtils.getNodePath(node_file.getFileAddr(),name);
-            node_file.setFileAddr(path);
+           // String path=DocumentUtils.getNodePath(node_file.getFileAddr(),name);
+            //node_file.setFileAddr(path);
             documentFileMapper.updateFile(node_file);
             //2.修改树形节点
             FancytreeNode fancytreeNode= fancytreeNodeMapper.getNodeById(id);
             fancytreeNode.setName(name);
-            fancytreeNode.setPath(path);
+            //fancytreeNode.setPath(path);
             fancytreeNodeMapper.updateNode(fancytreeNode);
             //3.修改redis中的节点信息
             jedisClient.hdel(ZTREE_NODE + ":" + fancytreeNode.getDiskName(), fancytreeNode.getId() + "");

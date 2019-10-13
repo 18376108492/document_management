@@ -9,14 +9,14 @@ public class SolrResult implements Serializable {
 
     private String id;
     private String node_title;
-    private String node_pId;
+    private Integer node_pId;
     private String node_path;
     private String node_name;
     private String disk_name;
 
     public SolrResult(){};
 
-    public SolrResult(String id, String node_title, String node_pId, String node_path, String node_name, String disk_name) {
+    public SolrResult(String id, String node_title, Integer node_pId, String node_path, String node_name, String disk_name) {
         this.id = id;
         this.node_title = node_title;
         this.node_pId = node_pId;
@@ -41,11 +41,11 @@ public class SolrResult implements Serializable {
         this.node_title = node_title;
     }
 
-    public String getNode_pId() {
+    public Integer getNode_pId() {
         return node_pId;
     }
 
-    public void setNode_pId(String node_pId) {
+    public void setNode_pId(Integer node_pId) {
         this.node_pId = node_pId;
     }
 

@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.itdan.document.domain.DocumentFile" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="parent_point" property="parentPoint" jdbcType="INTEGER" />
+    <result column="is_parent" property="isParent" jdbcType="INTEGER" />
     <result column="children_point" property="childrenPoint" jdbcType="INTEGER" />
     <result column="document" property="document" jdbcType="VARCHAR" />
     <result column="file_size" property="fileSize" jdbcType="VARCHAR" />

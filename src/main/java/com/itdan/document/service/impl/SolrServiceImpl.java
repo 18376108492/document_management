@@ -1,50 +1,58 @@
 package com.itdan.document.service.impl;
 
-
-import com.itdan.document.dao.SolrMapper;
-import com.itdan.document.service.SolrService;
-import com.itdan.document.utils.result.SearchResult;
-import org.apache.solr.client.solrj.SolrQuery;
+import com.itdan.document.dao.FancytreeNodeMapper;
+import com.itdan.document.domain.FancytreeNode;
+import com.itdan.document.service.SolrSerevice;
+import com.itdan.document.utils.result.DocumentReslut;
+import org.apache.commons.lang.StringUtils;
+import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.common.SolrInputDocument;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
- * 文档搜索逻辑层实现类
+ * solr功能实现逻辑层实现类
  */
-public class SolrServiceImpl implements SolrService {
-
+@Service
+public class SolrServiceImpl implements SolrSerevice {
 
     @Autowired
-    private SolrMapper solrMapper;
+    private FancytreeNodeMapper fancytreeNodeMapper;
+    @Autowired
+    private SolrServer solrServer;
 
     @Override
-    public SearchResult seachFile(String keyWord, int page, int rows) throws Exception {
-        SolrQuery query = new SolrQuery();
-        //创建查询条件
-        query.set("q", keyWord);
-        if (page <= 0) {
-            page = 1;
-        }
-        //分页设置
-        query.setStart((page - 1) * rows);
-        query.setRows(rows);
-        //默认搜索域
-        query.set("df", "node_name");
-        //开启高亮显示
-        query.setHighlight(true);
-        query.addHighlightField("node_name");
-        query.setHighlightSimplePre("<em style=\"color:red\">");
-        query.setHighlightSimplePost("</em>");
-
-        //查询
-        SearchResult searchResult = solrMapper.search(query);
-        long recourCount = searchResult.getRecourdCount();
-        //计算总页数
-        int totalPage = (int) recourCount / rows;
-        if (recourCount % rows > 0) {
-            totalPage++;
-        }
-        //添加返回结果
-        searchResult.setTotalPages(totalPage);
-        return searchResult;
+    public DocumentReslut importAllItem() {
+            //查询所有的节点
+            List<FancytreeNode> itemList = fancytreeNodeMapper.getAllNode();
+             try {
+                //将节点遍历
+                for (FancytreeNode node : itemList) {
+                    //将遍历的商品添加到文档中
+                    //创建文档对象
+                    SolrInputDocument document = new SolrInputDocument();
+                    document.addField("id", node.getId());
+                    document.addField("node_title", node.getTitle());
+                    document.addField("node_pId", node.getpId());
+                    document.addField("node_path", node.getPath());
+                    document.addField("node_name", node.getName());
+                    document.addField("disk_name", node.getDiskName());
+                    //把文档写入索引库
+                    solrServer.add(document);
+                }
+                //提交
+                solrServer.commit();
+                return DocumentReslut.ok();
+                //返回成功
+            } catch (Exception e) {
+                e.printStackTrace();
+                return DocumentReslut.build(400,"索引库数据添加失败");
+            }
     }
+
+
+
+
 }

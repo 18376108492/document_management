@@ -92,7 +92,7 @@ public class DiskController {
            //去数据库中获取已经存储在数据库中数据
            return JsonUtils.objectToJson(documentService.getAllFile(diskName));
        }
-       return JsonUtils.objectToJson("");
+       return JsonUtils.objectToJson("400");
     }
 
 

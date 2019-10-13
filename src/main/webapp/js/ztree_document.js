@@ -76,7 +76,7 @@
 
 
             // zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
-            // 这样调用：
+            // 这样调用：2
             //获取tree数据
             //初始化
             $(document).ready(function() {
@@ -569,3 +569,8 @@
                 var zTree = $.fn.zTree.getZTreeObj("treeDemo");
                 zTree.setting.edit.drag.autoExpandTrigger = $("#callbackTrigger").attr("checked");
             }
+
+
+// ===========================
+
+

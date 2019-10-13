@@ -131,4 +131,9 @@
     id=#{id,jdbcType=INTEGER}
     </if>
   </update>
+
+  <!--获取所有节点数据用于初始化索引库-->
+  <select id="getAllNode" resultMap="BaseResultMap">
+    select * from tree_node
+  </select>
 </mapper>

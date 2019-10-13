@@ -1,7 +1,9 @@
 package com.itdan.test.slor;
 
 import com.itdan.document.dao.FancytreeNodeMapper;
+import com.itdan.document.dao.SearchMapper;
 import com.itdan.document.domain.FancytreeNode;
+import com.itdan.document.utils.result.SearchResult;
 import com.itdan.test.BaseTest;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrResponse;
@@ -25,11 +27,14 @@ public class SlorTest extends BaseTest {
     @Autowired
     private FancytreeNodeMapper fancytreeNodeMapper;
 
+    @Autowired
+    private SearchMapper searchMapper;
+
     @Test
     public void testDemo01() throws Exception {
         //添加文本
         //创建一个SolrServer对象创建一个连接,参数solr服务的url
-        SolrServer solrServer = new HttpSolrServer("http://192.168.203.128:8080/solr");
+        SolrServer solrServer = new HttpSolrServer("http://192.168.13.128:8080/solr");
         //创建一个文档对象,SolrInputDocument对象
         //获取测试节点对象
         List<FancytreeNode> nodeList = fancytreeNodeMapper.getAllFile("D:/ge");
@@ -53,7 +58,7 @@ public class SlorTest extends BaseTest {
     @Test
     public void testDemo02() throws Exception {
         //删除索引
-        SolrServer solrServer = new HttpSolrServer("http://192.168.203.128:8080/solr");
+        SolrServer solrServer = new HttpSolrServer("http://192.168.13.128:8080/solr");
         //创建一个文档对象,SolrInputDocument对象
         SolrInputDocument document = new SolrInputDocument();
         solrServer.deleteById("1853359929");
@@ -65,7 +70,7 @@ public class SlorTest extends BaseTest {
     public void testDemo03() throws Exception {
         //查询测试
         //删除索引
-        SolrServer solrServer = new HttpSolrServer("http://192.168.203.128:8080/solr/collection1");
+        SolrServer solrServer = new HttpSolrServer("http://192.168.13.128:8080/solr/collection1");
         //创建查询对象
         SolrQuery solrQuery = new SolrQuery();
         //设置查询条件
@@ -84,7 +89,7 @@ public class SlorTest extends BaseTest {
     @Test
     public void testDemo04() throws Exception{
      //高级查询测试
-        SolrServer solrServer = new HttpSolrServer("http://192.168.203.128:8080/solr/collection1");
+        SolrServer solrServer = new HttpSolrServer("http://192.168.13.128:8080/solr/collection1");
         //创建查询对象
         SolrQuery solrQuery = new SolrQuery();
         //设置查询条件
@@ -128,5 +133,24 @@ public class SlorTest extends BaseTest {
             System.out.println("highlightingList:"+highlightingList);
         }
     }
+
+    @Test
+    public void testDemo05() throws Exception{
+        //测试SearchMapper
+        SolrServer solrServer = new HttpSolrServer("http://192.168.13.128:8080/solr/collection1");
+        //创建查询对象
+        SolrQuery solrQuery = new SolrQuery();
+        //设置查询条件
+        solrQuery.set("q","id:1853359929");
+        //设置分页
+        solrQuery.setStart(0);
+        solrQuery.setRows(20);
+        //设置默认查询域
+        solrQuery.set("df","node_name");
+        SearchResult searchResult= searchMapper.search(solrQuery);
+        System.out.println(searchResult.toString());
+     }
+
+
 }
 

@@ -1,5 +1,7 @@
 package com.itdan.document.utils.result;
 
+import com.itdan.document.domain.FancytreeNode;
+
 import java.util.List;
 
 /**
@@ -27,11 +29,20 @@ public class SearchResult {
         this.totalPages = totalPages;
     }
 
-    public List<SolrResult> getItemList() {
+    public List<SolrResult> getNodeList() {
         return nodeList;
     }
 
-    public void setItemList(List<SolrResult> itemList) {
-        this.nodeList = itemList;
+    public void setNodeList(List<SolrResult> nodeList) {
+        this.nodeList = nodeList;
+    }
+
+    @Override
+    public String toString() {
+        return "SearchResult{" +
+                "recourdCount=" + recourdCount +
+                ", totalPages=" + totalPages +
+                ", nodeList=" + nodeList +
+                '}';
     }
 }

@@ -5,7 +5,7 @@ import com.itdan.document.utils.result.SearchResult;
 /**
  * 文档搜索逻辑层接口
  */
-public interface SolrService {
+public interface SearchService {
 
 
     /**

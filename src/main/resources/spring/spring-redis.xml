@@ -16,7 +16,7 @@
 		<property name="jedisPool" ref="jedisPool"></property>
 	</bean>
 	<bean id="jedisPool" class="redis.clients.jedis.JedisPool">
-		<constructor-arg name="host" value="192.168.203.128"/>
+		<constructor-arg name="host" value="192.168.13.128"/>
 		<constructor-arg name="port" value="6379"/>
 	</bean>
 	<!-- 连接redis集群 -->
@@ -56,6 +56,6 @@
 
 	<!--HttpSolrServer的配置-->
 	<bean id="httpSolrServer" class="org.apache.solr.client.solrj.impl.HttpSolrServer">
-		<constructor-arg index="0" value="http://192.168.203.128:8080/solr"/>
+		<constructor-arg index="0" value="http://192.168.13.128:8080/solr"/>
 	</bean>
 </beans>

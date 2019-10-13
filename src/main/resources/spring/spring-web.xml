@@ -30,10 +30,12 @@
 		<property name="prefix" value="/WEB-INF/jsp/"></property>
 		<property name="suffix" value=".jsp"></property>
 	</bean>
-	<!-- 配置资源映射 -->
-	<!--<mvc:resources location="/css/" mapping="/css/**"/>-->
-	<!--<mvc:resources location="/img/" mapping="/images/**"/>-->
-	<!--<mvc:resources location="/js/" mapping="/js/**"/>-->
+	 <!--配置资源映射-->
+	<mvc:resources location="/css/" mapping="/css/**"/>
+	<mvc:resources location="/img/" mapping="/images/**"/>
+	<mvc:resources location="/js/" mapping="/js/**"/>
+	<mvc:resources location="/assets/" mapping="/assets/**"/>
+	<mvc:resources location="/base-component/" mapping="/base-component/**"/>
 
 	<!-- 配置多媒体解析器 -->
 	<!-- 文件上传解析器 -->

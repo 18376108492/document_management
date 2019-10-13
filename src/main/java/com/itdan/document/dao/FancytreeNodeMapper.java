@@ -47,4 +47,9 @@ public interface FancytreeNodeMapper {
      * @param fancytreeNode
      */
     void updateNode(FancytreeNode fancytreeNode);
+
+    /**
+     * 获取所有节点
+     */
+    List<FancytreeNode> getAllNode();
 }
