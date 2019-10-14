@@ -3,8 +3,10 @@ package com.itdan.test.slor;
 import com.itdan.document.dao.FancytreeNodeMapper;
 import com.itdan.document.dao.SearchMapper;
 import com.itdan.document.domain.FancytreeNode;
+import com.itdan.document.service.SearchService;
 import com.itdan.document.utils.result.SearchResult;
 import com.itdan.test.BaseTest;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrResponse;
 import org.apache.solr.client.solrj.SolrServer;
@@ -16,6 +18,7 @@ import org.apache.solr.common.SolrInputDocument;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.xml.bind.SchemaOutputResolver;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +32,9 @@ public class SlorTest extends BaseTest {
 
     @Autowired
     private SearchMapper searchMapper;
+
+    @Autowired
+    private SearchService searchService;
 
     @Test
     public void testDemo01() throws Exception {
@@ -151,6 +157,54 @@ public class SlorTest extends BaseTest {
         System.out.println(searchResult.toString());
      }
 
+     @Test
+     public void testDemo06() throws Exception{
+        //solr多条件拼接测试
+         //测试SearchMapper
+         SolrServer solrServer = new HttpSolrServer("http://192.168.13.128:8080/solr/collection1");
+         //创建查询对象
+         SolrQuery solrQuery = new SolrQuery();
+         StringBuilder params = new StringBuilder();  //创建一个条件组合的字符串
+         String node_name="D";
+         String disk_name="D";
+         String node_path="D";
 
+         //拼接条件
+         params.append("node_name:"+node_name);
+         params.append(" AND node_path:"+node_path);
+         params.append(" AND disk_name:"+disk_name);
+         //设置默认查询域
+         solrQuery.set("df","node_name");
+         //设置分页
+         solrQuery.setStart(0);
+         solrQuery.setRows(20);
+         //设置高亮
+         solrQuery.setHighlight(true);//开启高亮
+         solrQuery.addHighlightField("node_name");//设置高亮字段
+         //设置高亮前后缀
+         solrQuery.setHighlightSimplePre("<em style=\"color:red\">");
+         solrQuery.setHighlightSimplePost("</em>");
+         //添加查询条件
+         solrQuery.setQuery(params.toString());
+         //执行查询
+         SearchResult searchResult= searchMapper.search(solrQuery);
+         System.out.println(searchResult.getRecourdCount());
+         System.out.println(searchResult.getTotalPages());
+         System.out.println(searchResult.getNodeList().toString());
+         //执行查询
+        // QueryResponse solrResponse = solrServer.query(solrQuery);
+         //获取结果集
+         //SolrDocumentList solrDocuments = solrResponse.getResults();
+         //System.out.println(solrDocuments.toString());
+      }
+
+      @Test
+      public void testDemo07() throws Exception{
+
+        SearchResult searchResult= searchService.seachFile("D",1,30);
+          System.out.println(searchResult.getRecourdCount());
+          System.out.println(searchResult.getTotalPages());
+          System.out.println(searchResult.getNodeList().toString());
+    }
 }
 

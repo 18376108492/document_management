@@ -40,15 +40,15 @@
             <!--记得加分页功能-->
             </thead>
             <tbody>
-            <c:if test="${nodeList}==null">
+            <c:if test="${SEARCH_RESULT.nodeList}==null">
                  <span>搜索结果为空</span>
             </c:if>
-            <c:forEach items="${nodeList}" var="node" >
+            <c:forEach items="${SEARCH_RESULT.nodeList}" var="node" >
             <tr><td>${node.id}</td>
-                <td>${node.name}</td>
-                <td><a href="#">${node.path}</a></td>
-                <td>${node.pId}</td>
-                <td><a href="#">${node.diskName}</a></td>
+                <td>${node.node_name}</td>
+                <td><a href="#">${node.node_path}</a></td>
+                <td>${node.node_pId}</td>
+                <td><a href="#">${node.disk_name}</a></td>
                 <td>
                     <div class="am-dropdown" data-am-dropdown>
                         <button class="am-btn am-btn-default am-btn-xs am-dropdown-toggle" data-am-dropdown-toggle><span class="am-icon-cog"></span> <span class="am-icon-caret-down"></span></button>

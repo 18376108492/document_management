@@ -22,7 +22,12 @@ public class SearchServiceImpl implements SearchService {
     public SearchResult seachFile(String keyWord, int page, int rows) throws Exception {
         SolrQuery query = new SolrQuery();
         //创建查询条件
-        query.set("q", keyWord);
+        StringBuilder params = new StringBuilder();  //创建一个条件组合的字符串
+        //拼接条件
+        params.append("node_name:"+keyWord);
+        params.append(" AND node_path:"+keyWord);
+        params.append(" AND disk_name:"+keyWord);
+
         if (page <= 0) {
             page = 1;
         }
@@ -36,7 +41,7 @@ public class SearchServiceImpl implements SearchService {
         query.addHighlightField("node_name");
         query.setHighlightSimplePre("<em style=\"color:red\">");
         query.setHighlightSimplePost("</em>");
-
+        query.setQuery(params.toString());
         //查询
         SearchResult searchResult = searchMapper.search(query);
         long recourCount = searchResult.getRecourdCount();
